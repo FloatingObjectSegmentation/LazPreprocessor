@@ -19,8 +19,6 @@ namespace core
         */
 
         #region [config]
-        static string attributes_basic = "xyzRGB";
-        static string attributes_class = "c";
         static double[] radius_values = { 3 };
         static string rbnn_exe_location = @"C:\Users\km\source\repos\LazPreprocessor\LazPreprocessor\resources";
         #endregion
@@ -30,6 +28,8 @@ namespace core
         string txt_path;
         string txt_class_path;
         string pcd_path;
+        static string attributes_basic = "xyzRGB";
+        static string attributes_class = "c";
         #endregion
 
         public CoreProcedure(string filepath) {
