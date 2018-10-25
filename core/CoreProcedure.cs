@@ -19,7 +19,7 @@ namespace core
         */
 
         #region [config]
-        static double[] radius_values = { 3 };
+        static double[] radius_values = { 1, 2, 3, 4, 5, 8 };
         static string rbnn_exe_location = @"C:\Users\km\source\repos\LazPreprocessor\LazPreprocessor\resources";
         #endregion
 
