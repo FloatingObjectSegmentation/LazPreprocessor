@@ -20,7 +20,7 @@ namespace core
 
         #region [config]
         static double[] radius_values = { 1, 2, 3, 4, 5, 8 };
-        static string rbnn_exe_location = @"C:\Users\km\source\repos\LazPreprocessor\LazPreprocessor\resources";
+        static string rbnn_exe_location = @"C:\Users\km\source\repos\LazPreprocessor\core\resources";
         #endregion
 
         #region [members]
@@ -38,19 +38,21 @@ namespace core
         
         public void PreprocessLaz()
         {
-            CreateRGBAndClassTxtFilesFromLaz();
-            TransformTxtFileToPcdFile();
-            ExecuteRbnnFromPcdClassFile();
-            File.Delete(pcd_path);
+            CreateRGBClassIntensityTxtFilesFromLaz();
+            //TransformTxtFileToPcdFile();
+            //ExecuteRbnnFromPcdFile();
+            //File.Delete(pcd_path);
         }
 
         #region [auxiliary]
-        void CreateRGBAndClassTxtFilesFromLaz() {
-            txt_path = filepath.Replace(".laz", ".txt").Replace(".las", ".txt");
-            txt_class_path = filepath.Replace(".laz", "class.txt").Replace(".las", "class.txt");
-            Las2Txt.Exec(Path.GetDirectoryName(filepath), filepath, txt_path, attributes_basic);
-            Las2Txt.Exec(Path.GetDirectoryName(filepath), filepath, txt_class_path, attributes_class);
-            pcd_path = txt_path.Replace(".txt", ".pcd");
+        void CreateRGBClassIntensityTxtFilesFromLaz() {
+           // txt_path = filepath.Replace(".laz", ".txt").Replace(".las", ".txt");
+            //txt_class_path = filepath.Replace(".laz", "class.txt").Replace(".las", "class.txt");
+            string txt_intensity_path = filepath.Replace(".laz", "intensity.txt").Replace(".las", "intensity.txt");
+           // Las2Txt.Exec(Path.GetDirectoryName(filepath), filepath, txt_path, attributes_basic);
+           // Las2Txt.Exec(Path.GetDirectoryName(filepath), filepath, txt_class_path, attributes_class);
+           Las2Txt.Exec(Path.GetDirectoryName(filepath), filepath, txt_intensity_path, "i");
+           // pcd_path = txt_path.Replace(".txt", ".pcd");
 
         }
 
@@ -59,7 +61,7 @@ namespace core
             Txt2Pcd.ExecXYZ(txt_path);
         }
 
-        private void ExecuteRbnnFromPcdClassFile()
+        private void ExecuteRbnnFromPcdFile()
         {
             string rbnn_result_filepath = RbnnDriver.Execute(rbnn_exe_location, pcd_path, radius_values);
         }
