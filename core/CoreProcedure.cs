@@ -39,20 +39,20 @@ namespace core
         public void PreprocessLaz()
         {
             CreateRGBClassIntensityTxtFilesFromLaz();
-            //TransformTxtFileToPcdFile();
-            //ExecuteRbnnFromPcdFile();
-            //File.Delete(pcd_path);
+            TransformTxtFileToPcdFile();
+            ExecuteRbnnFromPcdFile();
+            File.Delete(pcd_path);
         }
 
         #region [auxiliary]
         void CreateRGBClassIntensityTxtFilesFromLaz() {
-           // txt_path = filepath.Replace(".laz", ".txt").Replace(".las", ".txt");
-            //txt_class_path = filepath.Replace(".laz", "class.txt").Replace(".las", "class.txt");
-            string txt_intensity_path = filepath.Replace(".laz", "intensity.txt").Replace(".las", "intensity.txt");
-           // Las2Txt.Exec(Path.GetDirectoryName(filepath), filepath, txt_path, attributes_basic);
-           // Las2Txt.Exec(Path.GetDirectoryName(filepath), filepath, txt_class_path, attributes_class);
+           txt_path = filepath.Replace(".laz", ".txt").Replace(".las", ".txt");
+           txt_class_path = filepath.Replace(".laz", "class.txt").Replace(".las", "class.txt");
+           string txt_intensity_path = filepath.Replace(".laz", "intensity.txt").Replace(".las", "intensity.txt");
+           Las2Txt.Exec(Path.GetDirectoryName(filepath), filepath, txt_path, attributes_basic);
+           Las2Txt.Exec(Path.GetDirectoryName(filepath), filepath, txt_class_path, attributes_class);
            Las2Txt.Exec(Path.GetDirectoryName(filepath), filepath, txt_intensity_path, "i");
-           // pcd_path = txt_path.Replace(".txt", ".pcd");
+           pcd_path = txt_path.Replace(".txt", ".pcd");
 
         }
 
