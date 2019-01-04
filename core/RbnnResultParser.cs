@@ -5,7 +5,7 @@ using System.Text;
 
 namespace core
 {
-    class RbnnResultParser
+    public class RbnnResultParser
     {
         public Dictionary<string, RbnnResult> ParseResults(string result_file_path) {
             Dictionary<string, RbnnResult> result = new Dictionary<string, RbnnResult>();
@@ -30,7 +30,7 @@ namespace core
         }
     }
 
-    class RbnnResult {
+    public class RbnnResult {
 
         public double radius;
         public List<bool> isPointFloating;

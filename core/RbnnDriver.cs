@@ -23,5 +23,9 @@ namespace core
                                Path.GetDirectoryName(filepath));
             return Path.Combine(Path.GetDirectoryName(filepath), "result") + Path.GetFileName(filepath);
         }
+
+        public static string GetResultFileName(string filepath) {
+            return Path.GetDirectoryName(filepath) + "result" + Path.GetFileName(filepath);
+        }
     }
 }

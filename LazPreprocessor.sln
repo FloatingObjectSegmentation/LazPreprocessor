@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2015
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "common", "common\common.csproj", "{DD7861BF-7D6C-485F-A05F-8D843A93F803}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "common", "common\common.csproj", "{DD7861BF-7D6C-485F-A05F-8D843A93F803}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "executor", "Executor\executor.csproj", "{B73AC1AC-6642-4EC2-BECB-B2EA4260F28A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "executor", "Executor\executor.csproj", "{B73AC1AC-6642-4EC2-BECB-B2EA4260F28A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "core", "core\core.csproj", "{64BC59F0-CA51-429E-B02E-7C86E14B5519}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "data_prep", "data_prep\data_prep.csproj", "{078D977D-6E85-4802-8669-855907BB5E96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "augmentation_sampler", "augmentation_sampler\augmentation_sampler.csproj", "{127E3DEE-A4D3-4943-98D6-26679C1A2E9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{078D977D-6E85-4802-8669-855907BB5E96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{078D977D-6E85-4802-8669-855907BB5E96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{078D977D-6E85-4802-8669-855907BB5E96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{127E3DEE-A4D3-4943-98D6-26679C1A2E9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{127E3DEE-A4D3-4943-98D6-26679C1A2E9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{127E3DEE-A4D3-4943-98D6-26679C1A2E9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{127E3DEE-A4D3-4943-98D6-26679C1A2E9F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
