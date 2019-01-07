@@ -12,12 +12,12 @@ namespace augmentation_sampler
     {
 
         #region [config]
-        static string TxtDatasetFileDirectory = "";
-        static string TxtDatasetFileName = "";
-        static string SamplesFileDirectory = "";
-        static string SamplesFileName = "";
+        static string TxtDatasetFileDirectory = @"C:\Users\km\Desktop\MAG\FloatingObjectFilter\data";
+        static string TxtDatasetFileName = "459_99.txt";
+        static string SamplesFileDirectory = @"C:\Users\km\Desktop\MAG\FloatingObjectFilter\data\augmentables";
+        static string SamplesFileName = "kurac.txt";
         static string overlaptool_exe_location = "";
-        static string rbnn_exe_location = "";
+        static string rbnn_exe_location = @"C:\Users\km\source\repos\LazPreprocessor\core\resources";
         static int ObjectsToAdd = 500;
 
         // bounds should be redefined according to dataset
@@ -176,13 +176,13 @@ namespace augmentation_sampler
             // compute the current candidate's bounding points
             List<Vector3> BoundingBoxPoints = new List<Vector3>();
             int x = 1, y = 1, z = 1;
-            for (int c = 0; c < 1; c++)
+            for (int c = 0; c < 2; c++)
             {
                 x = -x;
-                for (int j = 0; j < 1; j++)
+                for (int j = 0; j < 2; j++)
                 {
                     y = -y;
-                    for (int k = 0; k < 1; k++)
+                    for (int k = 0; k < 2; k++)
                     {
                         z = -z;
 
@@ -238,6 +238,10 @@ namespace augmentation_sampler
             for (int i = 0; i < locations.Count; i++)
             {
                 str += locations[i].X + "," + locations[i].Y + "," + locations[i].Z + " ";
+
+                List<Vector3> boundingPoints = GetBoundingBoxPoints(samples[i], locations[i]);
+                str += String.Join(" ", boundingPoints.Select((x) => { return x.X + "," + x.Y + "," + x.Z; }).ToList());
+                str += " ";
                 str += maxDims[i] + "\n";
             }
 
