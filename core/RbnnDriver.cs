@@ -10,6 +10,18 @@ namespace core
     {
 
         // returns the name of the file that the result was saved to
+
+        public static string ExecuteTxt(string rbnn_exe_location, string filepath, double[] radius_values) {
+            string newFileName = Txt2Pcd.ExecXYZ(filepath);
+            Execute(rbnn_exe_location, newFileName, radius_values);
+            File.Delete(newFileName);
+            
+            return Path.Combine(Path.GetDirectoryName(filepath), "result") + Path.GetFileName(filepath).Replace(".txt", ".pcd");
+        }
+
+        /// <summary>
+        /// accepts a .pcd file
+        /// </summary>
         public static string Execute(string rbnn_exe_location, string filepath, double[] radius_values) {
 
             string pshcmd = String.Format("{0}\\rbnn.exe {1} {2} ",
@@ -25,7 +37,7 @@ namespace core
         }
 
         public static string GetResultFileName(string filepath) {
-            return Path.GetDirectoryName(filepath) + "result" + Path.GetFileName(filepath);
+            return Path.GetDirectoryName(filepath) + "\\result" + Path.GetFileName(filepath);
         }
     }
 }

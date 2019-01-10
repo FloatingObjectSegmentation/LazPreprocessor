@@ -12,13 +12,22 @@ namespace augmentation_sampler
     {
 
         #region [config]
+        // source lidar dataset
         static string TxtDatasetFileDirectory = @"C:\Users\km\Desktop\MAG\FloatingObjectFilter\data";
         static string TxtDatasetFileName = "459_99.txt";
+
+        
+        ///  augmentation
+        static int ObjectsToAdd = 500;
+        // saving location of augmentables
         static string SamplesFileDirectory = @"C:\Users\km\Desktop\MAG\FloatingObjectFilter\data\augmentables";
         static string SamplesFileName = "kurac.txt";
-        static string overlaptool_exe_location = "";
+
+        // required tool locations
+        static string overlaptool_exe_location = @"C:\Users\km\source\repos\LazPreprocessor\augmentation_sampler\resources";
         static string rbnn_exe_location = @"C:\Users\km\source\repos\LazPreprocessor\core\resources";
-        static int ObjectsToAdd = 500;
+        
+        
 
         // bounds should be redefined according to dataset
         static Vector3 minBound = new Vector3(0.0f, 0.0f, 0.0f);
@@ -139,7 +148,7 @@ namespace augmentation_sampler
                 int highestIndex = nextIndex;
                 for (int j = lowestIndex; j < highestIndex; j++)
                 {
-                    if (!res.isPointFloating[j])
+                    if (res.clusterIndices[j] == -1)
                     {
                         int sample_idx = LidarPointIndexToSampleIndex[j];
                         if (RbnnMinValsPerObject[sample_idx] == 0.0)
@@ -151,11 +160,11 @@ namespace augmentation_sampler
 
         private static Dictionary<string, RbnnResult> ComputeRbnn(string filepath)
         {
-            RbnnDriver.Execute(rbnn_exe_location, filepath, common.Numpy.LinSpace(5, 50, 10).ToArray());
+            filepath = RbnnDriver.ExecuteTxt(rbnn_exe_location, filepath, common.Numpy.LinSpace(2, 50, 10).ToArray());
 
             // retrieve results
             RbnnResultParser parser = new RbnnResultParser();
-            Dictionary<string, RbnnResult> results = parser.ParseResults(RbnnDriver.GetResultFileName(filepath));
+            Dictionary<string, RbnnResult> results = parser.ParseResults(filepath);
             return results;
         }
 
@@ -226,7 +235,7 @@ namespace augmentation_sampler
         {
             File.WriteAllText(Path.Combine(SamplesFileDirectory, SamplesFileName), str);
 
-            PowerShell.Execute("./" + overlaptool_exe_location + " " + SamplesFileDirectory + " " + SamplesFileName);
+            PowerShell.Execute(overlaptool_exe_location + "\\overlap_compute.exe " + SamplesFileDirectory + " " + SamplesFileName);
 
             string result_file = Path.Combine(SamplesFileDirectory, "result" + SamplesFileName);
             return result_file;

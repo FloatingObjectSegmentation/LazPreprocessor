@@ -21,24 +21,29 @@ namespace core
             string[] parts = line.Split(" ");
             string radius_str = parts[0];
             double radius = double.Parse(radius_str);
-            string values = parts[1];
 
-            List<bool> isPointFloating = new List<bool>(values.Length);
-            Array.ForEach(values.ToCharArray(), (x) => isPointFloating.Add(x == '1' ? true : false) );
+            // yeah... slow...
+            string[] values = new string[parts.Length - 2];
+            for (int i = 1; i < parts.Length - 1; i++) {
+                values[i - 1] = parts[i]; 
+            }
 
-            return new KeyValuePair<string, RbnnResult>(radius_str, new RbnnResult(radius, isPointFloating));
+            List<int> ClusterIndices = new List<int>(values.Length);
+            Array.ForEach(values, (x) => ClusterIndices.Add(int.Parse(x)));
+
+            return new KeyValuePair<string, RbnnResult>(radius_str, new RbnnResult(radius, ClusterIndices));
         }
     }
 
     public class RbnnResult {
 
         public double radius;
-        public List<bool> isPointFloating;
+        public List<int> clusterIndices; // -1 are transitive floor points, floating are positive.
 
-        public RbnnResult(double radius, List<bool> isPointFloating)
+        public RbnnResult(double radius, List<int> ClusterIndices)
         {
             this.radius = radius;
-            this.isPointFloating = isPointFloating;
+            this.clusterIndices = ClusterIndices;
         }
     }
 }

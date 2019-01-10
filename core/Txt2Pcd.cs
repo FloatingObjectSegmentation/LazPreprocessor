@@ -25,7 +25,7 @@ namespace core
                         "DATA ascii" + "\n" +
                         "{1}" + "\n";
 
-        public static void ExecXYZ(string filepath) {
+        public static string ExecXYZ(string filepath) {
             string[] lines = File.ReadAllLines(filepath);
             for (int i = 0; i < lines.Length; i++) {
                 string[] parts = lines[i].Split(" ");
@@ -36,6 +36,7 @@ namespace core
                 lines[i] = string.Format("{0:F5} {1:F5} {2:F5}", x,y,z);
             }
             File.WriteAllText(filepath.Replace(".txt", ".pcd"), string.Format(header, lines.Length, string.Join("\n", lines)));
+            return filepath.Replace(".txt", ".pcd");
         }
 
         #region [auxiliary]
