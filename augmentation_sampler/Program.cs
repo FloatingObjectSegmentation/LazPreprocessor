@@ -78,9 +78,55 @@ namespace augmentation_sampler
 
             nextIndex = CreateNewPointsAndIndexThemBackIntoOriginalSamples(nextIndex, LidarFileLinesAugmented, LidarPointIndexToSampleIndex);
 
+            double minX = 9999999999.0;
+            double minY = 9999999999.0;
+            double minZ = 9999999999.0;
+            for (int i = 0; i < LidarFileLines.Count; i++)
+            {
+                String[] parts = LidarFileLines[i].Split(" ");
+                double x = Double.Parse(parts[0]), y = Double.Parse(parts[1]), z = Double.Parse(parts[2]);
+                if (x < minX) minX = x;
+                if (y < minY) minY = y;
+                if (z < minZ) minZ = z;
+            }
+            Console.WriteLine("Before add: " + minX + " " + minY + " " + minZ);
+
             string filepath = StoreAllPointsToTempFile(LidarFileLines, LidarFileLinesAugmented);
 
+            // debug only
+            int point_idx = 12517757;
+            AugmentableObjectSample s = samples[LidarPointIndexToSampleIndex[point_idx]];
+            Vector3 locs = locations[LidarPointIndexToSampleIndex[point_idx]];
+            String[] some = File.ReadAllLines(filepath);
+            Console.WriteLine(some[point_idx]);
+            Console.WriteLine(s.name + s.sizeMeters + locs.ToString());
+
+
+            minX = 9999999999.0;
+            minY = 9999999999.0;
+            minZ = 9999999999.0;
+            for (int i = 0; i < some.Length; i++) {
+                String[] parts = some[i].Split(" ");
+                double x = Double.Parse(parts[0]), y = Double.Parse(parts[1]), z = Double.Parse(parts[2]);
+                if (x < minX) minX = x;
+                if (y < minY) minY = y;
+                if (z < minZ) minZ = z;
+            }
+            Console.WriteLine("After add: " + minX + " " + minY + " " + minZ);
+               
+
             Dictionary<string, RbnnResult> results = ComputeRbnn(filepath);
+
+            foreach (KeyValuePair<String, RbnnResult> q in results) {
+
+                RbnnResult r = q.Value;
+                for (int i = 0; i < r.clusterIndices.Count; i++) {
+                    if (r.clusterIndices[i] != -1)
+                        Console.WriteLine(i + " " + r.clusterIndices[i]);
+                }
+                
+            }
+            // end debug only
 
             ComputeRbnnMinVals(nextIndex, lowestIndex, LidarPointIndexToSampleIndex, results);
         }
@@ -160,7 +206,7 @@ namespace augmentation_sampler
 
         private static Dictionary<string, RbnnResult> ComputeRbnn(string filepath)
         {
-            filepath = RbnnDriver.ExecuteTxt(rbnn_exe_location, filepath, common.Numpy.LinSpace(2, 50, 10).ToArray());
+            filepath = RbnnDriver.ExecuteTxt(rbnn_exe_location, filepath, common.Numpy.LinSpace(2, 15, 10).ToArray());
 
             // retrieve results
             RbnnResultParser parser = new RbnnResultParser();
@@ -172,6 +218,7 @@ namespace augmentation_sampler
         {
             foreach (var x in ToAdd)
                 LidarFileLines.Add(x.X + " " + x.Y + " " + x.Z + " 0 0 0");
+            
 
             // store it
             string filepath = Path.Combine(TxtDatasetFileDirectory, "temp" + TxtDatasetFileName);
