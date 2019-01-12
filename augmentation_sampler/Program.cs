@@ -13,14 +13,14 @@ namespace augmentation_sampler
 
         #region [config]
         // source lidar dataset
-        static string TxtDatasetFileDirectory = @"C:\Users\km\Desktop\MAG\FloatingObjectFilter\data";
+        static string TxtDatasetFileDirectory = @"C:\Users\km\Desktop\MAG\floatingObjectFilter\data";
         static string TxtDatasetFileName = "459_99.txt";
 
         
         ///  augmentation
         static int ObjectsToAdd = 500;
         // saving location of augmentables
-        static string SamplesFileDirectory = @"C:\Users\km\Desktop\MAG\FloatingObjectFilter\data\augmentables";
+        static string SamplesFileDirectory = @"C:\Users\km\Desktop\MAG\floatingObjectFilter\data\augmentables";
         static string SamplesFileName = "kurac.txt";
 
         // required tool locations
@@ -73,10 +73,6 @@ namespace augmentation_sampler
             int lowestIndex = nextIndex;
 
             List<Vector3> LidarFileLinesAugmented = new List<Vector3>();
-            
-            Dictionary<int, int> LidarPointIndexToSampleIndex = new Dictionary<int, int>();
-
-            nextIndex = CreateNewPointsAndIndexThemBackIntoOriginalSamples(nextIndex, LidarFileLinesAugmented, LidarPointIndexToSampleIndex);
 
             double minX = 9999999999.0;
             double minY = 9999999999.0;
@@ -91,7 +87,16 @@ namespace augmentation_sampler
             }
             Console.WriteLine("Before add: " + minX + " " + minY + " " + minZ);
 
+            Dictionary<int, int> LidarPointIndexToSampleIndex = new Dictionary<int, int>();
+
+            nextIndex = CreateNewPointsAndIndexThemBackIntoOriginalSamples(nextIndex, LidarFileLinesAugmented, LidarPointIndexToSampleIndex);
+
+            LidarFileLinesAugmented = AugmentedPointsToLidarDataCoordinateFrame(LidarFileLines, LidarFileLinesAugmented);
+
+
+
             string filepath = StoreAllPointsToTempFile(LidarFileLines, LidarFileLinesAugmented);
+
 
             // debug only
             int point_idx = 12517757;
@@ -101,30 +106,39 @@ namespace augmentation_sampler
             Console.WriteLine(some[point_idx]);
             Console.WriteLine(s.name + s.sizeMeters + locs.ToString());
 
-
             minX = 9999999999.0;
             minY = 9999999999.0;
             minZ = 9999999999.0;
-            for (int i = 0; i < some.Length; i++) {
-                String[] parts = some[i].Split(" ");
-                double x = Double.Parse(parts[0]), y = Double.Parse(parts[1]), z = Double.Parse(parts[2]);
+            int minZidx = 0;
+            for (int i = 0; i < LidarFileLinesAugmented.Count; i++)
+            {
+                Vector3 curr = LidarFileLinesAugmented[i];
+                double x = curr.X, y = curr.Y, z = curr.Z;
                 if (x < minX) minX = x;
                 if (y < minY) minY = y;
-                if (z < minZ) minZ = z;
+                if (z < minZ)
+                {
+                    minZ = z;
+                    minZidx = i;
+                }
             }
             Console.WriteLine("After add: " + minX + " " + minY + " " + minZ);
-               
+            Console.WriteLine("Type of minimum: " + samples[LidarPointIndexToSampleIndex[lowestIndex + minZidx]].name);
+            Console.WriteLine("Type of minimum: " + samples[LidarPointIndexToSampleIndex[lowestIndex + minZidx]].sizeMeters.ToString());
+            Console.WriteLine("Location of minimum: " + locations[LidarPointIndexToSampleIndex[lowestIndex + minZidx]]);
 
             Dictionary<string, RbnnResult> results = ComputeRbnn(filepath);
 
-            foreach (KeyValuePair<String, RbnnResult> q in results) {
+            foreach (KeyValuePair<String, RbnnResult> q in results)
+            {
 
                 RbnnResult r = q.Value;
-                for (int i = 0; i < r.clusterIndices.Count; i++) {
+                for (int i = 0; i < r.clusterIndices.Count; i++)
+                {
                     if (r.clusterIndices[i] != -1)
                         Console.WriteLine(i + " " + r.clusterIndices[i]);
                 }
-                
+
             }
             // end debug only
 
@@ -212,6 +226,20 @@ namespace augmentation_sampler
             RbnnResultParser parser = new RbnnResultParser();
             Dictionary<string, RbnnResult> results = parser.ParseResults(filepath);
             return results;
+        }
+
+        private static List<Vector3> AugmentedPointsToLidarDataCoordinateFrame(List<string> LidarFileLines, List<Vector3> LidarFileLinesAugmented)
+        {
+            Vector3 minCoord = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            LidarFileLines.ForEach((l) => {
+                float[] parts = l.Split(" ").Select((k) => float.Parse(k)).ToArray();
+                float x = parts[0], y = parts[1], z = parts[2];
+                if (x < minCoord.X) minCoord.X = x;
+                if (y < minCoord.Y) minCoord.Y = y;
+                if (z < minCoord.Z) minCoord.Z = z;
+            });
+            LidarFileLinesAugmented = LidarFileLinesAugmented.Select((x) => Vector3.Add(x, minCoord)).ToList();
+            return LidarFileLinesAugmented;
         }
 
         private static string StoreAllPointsToTempFile(List<string> LidarFileLines, List<Vector3> ToAdd)
