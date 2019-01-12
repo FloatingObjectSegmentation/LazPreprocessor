@@ -73,60 +73,16 @@ namespace augmentation_sampler
             int lowestIndex = nextIndex;
 
             List<Vector3> LidarFileLinesAugmented = new List<Vector3>();
-
-            double minX = 9999999999.0;
-            double minY = 9999999999.0;
-            double minZ = 9999999999.0;
-            for (int i = 0; i < LidarFileLines.Count; i++)
-            {
-                String[] parts = LidarFileLines[i].Split(" ");
-                double x = Double.Parse(parts[0]), y = Double.Parse(parts[1]), z = Double.Parse(parts[2]);
-                if (x < minX) minX = x;
-                if (y < minY) minY = y;
-                if (z < minZ) minZ = z;
-            }
-            Console.WriteLine("Before add: " + minX + " " + minY + " " + minZ);
-
+            
             Dictionary<int, int> LidarPointIndexToSampleIndex = new Dictionary<int, int>();
 
             nextIndex = CreateNewPointsAndIndexThemBackIntoOriginalSamples(nextIndex, LidarFileLinesAugmented, LidarPointIndexToSampleIndex);
 
             LidarFileLinesAugmented = AugmentedPointsToLidarDataCoordinateFrame(LidarFileLines, LidarFileLinesAugmented);
-
-
-
+            
             string filepath = StoreAllPointsToTempFile(LidarFileLines, LidarFileLinesAugmented);
 
-
-            // debug only
-            int point_idx = 12517757;
-            AugmentableObjectSample s = samples[LidarPointIndexToSampleIndex[point_idx]];
-            Vector3 locs = locations[LidarPointIndexToSampleIndex[point_idx]];
-            String[] some = File.ReadAllLines(filepath);
-            Console.WriteLine(some[point_idx]);
-            Console.WriteLine(s.name + s.sizeMeters + locs.ToString());
-
-            minX = 9999999999.0;
-            minY = 9999999999.0;
-            minZ = 9999999999.0;
-            int minZidx = 0;
-            for (int i = 0; i < LidarFileLinesAugmented.Count; i++)
-            {
-                Vector3 curr = LidarFileLinesAugmented[i];
-                double x = curr.X, y = curr.Y, z = curr.Z;
-                if (x < minX) minX = x;
-                if (y < minY) minY = y;
-                if (z < minZ)
-                {
-                    minZ = z;
-                    minZidx = i;
-                }
-            }
-            Console.WriteLine("After add: " + minX + " " + minY + " " + minZ);
-            Console.WriteLine("Type of minimum: " + samples[LidarPointIndexToSampleIndex[lowestIndex + minZidx]].name);
-            Console.WriteLine("Type of minimum: " + samples[LidarPointIndexToSampleIndex[lowestIndex + minZidx]].sizeMeters.ToString());
-            Console.WriteLine("Location of minimum: " + locations[LidarPointIndexToSampleIndex[lowestIndex + minZidx]]);
-
+            
             Dictionary<string, RbnnResult> results = ComputeRbnn(filepath);
 
             foreach (KeyValuePair<String, RbnnResult> q in results)
@@ -211,7 +167,7 @@ namespace augmentation_sampler
                     if (res.clusterIndices[j] == -1)
                     {
                         int sample_idx = LidarPointIndexToSampleIndex[j];
-                        if (RbnnMinValsPerObject[sample_idx] == 0.0)
+                        if (RbnnMinValsPerObject[sample_idx] == 0.0 && i != 0)
                             RbnnMinValsPerObject[sample_idx] = ks[i - 1]; // the previous rbnn value was its boundary
                     }
                 }
