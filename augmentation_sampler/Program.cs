@@ -43,19 +43,31 @@ namespace augmentation_sampler
 
         static void Main(string[] args)
         {
-            UnfilteredSampleObjects();
-            FilterSampleObjects();
-            ComputeRbnnMinVals();
-
-            string str = SamplesToString();
-            File.WriteAllText(Path.Combine(SamplesFileDirectory, SamplesFileName), str);
-            PowerShell.Execute(underground_filter_exe_location + "\\underground_filter.exe "
-                + DmrDirectory +         " " + DmrFileName + " "
-                + SamplesFileDirectory + " " + SamplesFileName);
-            DiscardFilteredExamples("underground");
-
-
-            SaveResults();
+            
+            Action<Action> Time = delegate (Action a) {
+                DateTime dt = DateTime.Now;
+                a();
+                Console.WriteLine(a.Method.Name + " " + DateTime.Now.Subtract(dt).ToString("c"));
+                dt = DateTime.Now;
+            };
+            
+            Time(UnfilteredSampleObjects);
+            Time(FilterSampleObjects);
+            Time(ComputeRbnnMinVals);
+            Time(delegate ()
+            {
+                string str = SamplesToString();
+                File.WriteAllText(Path.Combine(SamplesFileDirectory, SamplesFileName), str);
+                PowerShell.Execute(underground_filter_exe_location + "\\underground_filter.exe "
+                    + DmrDirectory + " " + DmrFileName + " "
+                    + SamplesFileDirectory + " " + SamplesFileName);
+                DiscardFilteredExamples("underground");
+            });
+            
+            
+            Time(SaveResults);
+            Console.WriteLine("Program finished. Press the ANY key to continue...");
+            Console.ReadLine();
         }
 
         #region [aux]
@@ -95,7 +107,7 @@ namespace augmentation_sampler
             
             Dictionary<string, RbnnResult> results = ComputeRbnn(filepath);
 
-            foreach (KeyValuePair<String, RbnnResult> q in results)
+            /*foreach (KeyValuePair<String, RbnnResult> q in results)
             {
 
                 RbnnResult r = q.Value;
@@ -105,7 +117,7 @@ namespace augmentation_sampler
                         Console.WriteLine(i + " " + r.clusterIndices[i]);
                 }
 
-            }
+            }*/
             // end debug only
 
             ComputeRbnnMinVals(nextIndex, lowestIndex, LidarPointIndexToSampleIndex, results);
