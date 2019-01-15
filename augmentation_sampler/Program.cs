@@ -45,28 +45,12 @@ namespace augmentation_sampler
         static void Main(string[] args)
         {
             
-            Action<Action> Time = delegate (Action a) {
-                DateTime dt = DateTime.Now;
-                a();
-                Console.WriteLine(a.Method.Name + " " + DateTime.Now.Subtract(dt).ToString("c"));
-                dt = DateTime.Now;
-            };
-            
-            Time(UnfilteredSampleObjects);
-            Time(FilterSampleObjects);
-            Time(ComputeRbnnMinVals);
-            Time(delegate ()
-            {
-                string str = SamplesToString();
-                File.WriteAllText(Path.Combine(SamplesFileDirectory, SamplesFileName), str);
-                PowerShell.Execute(underground_filter_exe_location + "\\underground_filter.exe "
-                    + DmrDirectory + " " + DmrFileName + " "
-                    + SamplesFileDirectory + " " + SamplesFileName);
-                DiscardFilteredExamples("underground");
-            });
-            
-            
-            Time(SaveResults);
+            Tools.Time(UnfilteredSampleObjects);
+            Tools.Time(FilterSampleObjects);
+            Tools.Time(ComputeRbnnMinVals);
+            Tools.Time(FilterUndergroundPoints);
+            Tools.Time(SaveResults);
+
             Console.WriteLine("Program finished. Press the ANY key to continue...");
             Console.ReadLine();
         }
@@ -123,6 +107,15 @@ namespace augmentation_sampler
             // end debug only
 
             ComputeRbnnMinVals(nextIndex, lowestIndex, LidarPointIndexToSampleIndex, results);
+        }
+
+        private static void FilterUndergroundPoints() {
+            string str = SamplesToString();
+            File.WriteAllText(Path.Combine(SamplesFileDirectory, SamplesFileName), str);
+            PowerShell.Execute(underground_filter_exe_location + "\\underground_filter.exe "
+                + DmrDirectory + " " + DmrFileName + " "
+                + SamplesFileDirectory + " " + SamplesFileName);
+            DiscardFilteredExamples("underground");
         }
 
         private static void SaveResults()

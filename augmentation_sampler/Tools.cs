@@ -10,6 +10,13 @@ namespace augmentation_sampler
     public static class Tools
     {
 
+        public static void Time(Action a) {
+            DateTime dt = DateTime.Now;
+            a();
+            Console.WriteLine(a.Method.Name + " " + DateTime.Now.Subtract(dt).ToString("c"));
+            dt = DateTime.Now;
+        }
+
         public static Vector3 FindMinimumVector(List<string> LidarFileLines)
         {
             Vector3 minCoord = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
