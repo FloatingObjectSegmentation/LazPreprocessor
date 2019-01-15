@@ -30,6 +30,8 @@ namespace downloader
 
     internal class SlemenikDownloader
     {
+
+        #region [config]
         // which ones to get
         private static readonly int[] SlovenianMapBounds = { 449, 121, 449, 121 }; //minx,miny,maxx,maxy in thousand, manualy set based on ARSO website
         private static List<List<int>> CherryPicked;
@@ -38,21 +40,23 @@ namespace downloader
             CherryPicked.Add(new List<int> { 449, 121 });
         }
 
+        static TypeOfExecution ExecType = TypeOfExecution.CherryPick;
 
+        // paths
         private static readonly string ResourceDirectoryPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent?.FullName + "\\resources\\";
         private static readonly string LidarFilesSavePath = @"C:\Users\km\Desktop\LIDAR_WORKSPACE\lidar\";
         private static readonly string DmrDirectoryPath = @"C:\Users\km\Desktop\LIDAR_WORKSPACE\dmr\";
+        #endregion
 
+        #region [aux vars]
         private const int OrtoPhotoImgSize = 2000;
         private static bool IncludeNormals = false;
-
         private static int _bottomLeftX;
         private static int _bottomLeftY;
         private static int _addedBlocs;
-
         static string current = "";
-
-        static TypeOfExecution ExecType = TypeOfExecution.CherryPick;
+        #endregion
+        
 
 
         public static void Main()

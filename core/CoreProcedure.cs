@@ -35,11 +35,15 @@ namespace core
         public CoreProcedure(string filepath) {
             this.filepath = filepath;
         }
+
+        public void Dmr2Pcd() {
+            TransformTxtFileToPcdFile(filepath, ";");
+        }
         
         public void PreprocessLaz()
         {
             CreateRGBClassIntensityTxtFilesFromLaz();
-            TransformTxtFileToPcdFile();
+            TransformTxtFileToPcdFile(txt_path);
             ExecuteRbnnFromPcdFile();
             File.Delete(pcd_path);
         }
@@ -56,9 +60,9 @@ namespace core
 
         }
 
-        void TransformTxtFileToPcdFile()
+        void TransformTxtFileToPcdFile(string txt_path, string separator = " ")
         {
-            Txt2Pcd.ExecXYZ(txt_path);
+            Txt2Pcd.ExecXYZ(txt_path, separator);
         }
 
         private void ExecuteRbnnFromPcdFile()

@@ -13,33 +13,28 @@ namespace augmentation_sampler
 
         #region [config]
         // source lidar dataset
-        static string TxtDatasetFileDirectory = @"C:\Users\km\Desktop\MAG\floatingObjectFilter\data";
-        static string TxtDatasetFileName = "459_99.txt";
+        static string TxtDatasetFileDirectory = @"C:\Users\km\Desktop\LIDAR_WORKSPACE\lidar";
+        static string TxtDatasetFileName = "449_121.txt";
 
         // source dataset DMR
-        static string DmrDirectory = @"C:\Users\km\Desktop\MAG\FloatingObjectFilter\data\dmr";
-        static string DmrFileName = "459_99.txt";
-
-
-        ///  augmentation
-        static int ObjectsToAdd = 500;
+        static string DmrDirectory = @"C:\Users\km\Desktop\LIDAR_WORKSPACE\dmr";
+        static string DmrFileName = "449_121.txt";
+        
         // saving location of augmentables
-        static string SamplesFileDirectory = @"C:\Users\km\Desktop\MAG\floatingObjectFilter\data\augmentables";
+        static string SamplesFileDirectory = @"C:\Users\km\Desktop\LIDAR_WORKSPACE\augmentation";
         static string SamplesFileName = "kurac.txt";
 
         // required tool locations
         static string overlaptool_exe_location = @"C:\Users\km\source\repos\LazPreprocessor\augmentation_sampler\resources";
         static string rbnn_exe_location = @"C:\Users\km\source\repos\LazPreprocessor\core\resources";
         static string underground_filter_exe_location = "";
-        
-        
 
-        // bounds should be redefined according to dataset
-        static Vector3 minBound = new Vector3(0.0f, 0.0f, 0.0f);
-        static Vector3 maxBound = new Vector3(1000.0f, 1000.0f, 50.0f);
+        static int ObjectsToAdd = 500;
         #endregion
 
         #region [computed]
+        static Vector3 minBound;
+        static Vector3 maxBound;
         static List<AugmentableObjectSample> samples = new List<AugmentableObjectSample>();
         static List<Vector3> locations = new List<Vector3>();
         static List<float> maxDims = new List<float>();
@@ -66,6 +61,8 @@ namespace augmentation_sampler
         #region [aux]
         private static void UnfilteredSampleObjects()
         {
+            minBound = Tools.FindMinimumVector(Path.Combine(TxtDatasetFileDirectory, TxtDatasetFileName));
+            maxBound = Tools.FindMaximumVector(Path.Combine(TxtDatasetFileDirectory, TxtDatasetFileName));
             ObjectSampler samp = new ObjectSampler();
             samp.UnfilteredSampleObjects(ObjectsToAdd, minBound, maxBound);
             samples = samp.samples;
@@ -92,8 +89,6 @@ namespace augmentation_sampler
             Dictionary<int, int> LidarPointIndexToSampleIndex = new Dictionary<int, int>();
 
             nextIndex = CreateNewPointsAndIndexThemBackIntoOriginalSamples(nextIndex, LidarFileLinesAugmented, LidarPointIndexToSampleIndex);
-
-            LidarFileLinesAugmented = AugmentedPointsToLidarDataCoordinateFrame(LidarFileLines, LidarFileLinesAugmented);
             
             string filepath = StoreAllPointsToTempFile(LidarFileLines, LidarFileLinesAugmented);
 
@@ -198,21 +193,7 @@ namespace augmentation_sampler
             Dictionary<string, RbnnResult> results = parser.ParseResults(filepath);
             return results;
         }
-
-        private static List<Vector3> AugmentedPointsToLidarDataCoordinateFrame(List<string> LidarFileLines, List<Vector3> LidarFileLinesAugmented)
-        {
-            Vector3 minCoord = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-            LidarFileLines.ForEach((l) => {
-                float[] parts = l.Split(" ").Select((k) => float.Parse(k)).ToArray();
-                float x = parts[0], y = parts[1], z = parts[2];
-                if (x < minCoord.X) minCoord.X = x;
-                if (y < minCoord.Y) minCoord.Y = y;
-                if (z < minCoord.Z) minCoord.Z = z;
-            });
-            LidarFileLinesAugmented = LidarFileLinesAugmented.Select((x) => Vector3.Add(x, minCoord)).ToList();
-            return LidarFileLinesAugmented;
-        }
-
+        
         private static string StoreAllPointsToTempFile(List<string> LidarFileLines, List<Vector3> ToAdd)
         {
             foreach (var x in ToAdd)

@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "executor", "Executor\execut
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "core", "core\core.csproj", "{64BC59F0-CA51-429E-B02E-7C86E14B5519}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "data_prep", "data_prep\data_prep.csproj", "{078D977D-6E85-4802-8669-855907BB5E96}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "augmentation_sampler", "augmentation_sampler\augmentation_sampler.csproj", "{127E3DEE-A4D3-4943-98D6-26679C1A2E9F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "downloader", "downloader\downloader.csproj", "{E53C6DAE-8DA2-428F-896F-9B6A958D8588}"
@@ -33,10 +31,6 @@ Global
 		{64BC59F0-CA51-429E-B02E-7C86E14B5519}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64BC59F0-CA51-429E-B02E-7C86E14B5519}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64BC59F0-CA51-429E-B02E-7C86E14B5519}.Release|Any CPU.Build.0 = Release|Any CPU
-		{078D977D-6E85-4802-8669-855907BB5E96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{078D977D-6E85-4802-8669-855907BB5E96}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{078D977D-6E85-4802-8669-855907BB5E96}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{078D977D-6E85-4802-8669-855907BB5E96}.Release|Any CPU.Build.0 = Release|Any CPU
 		{127E3DEE-A4D3-4943-98D6-26679C1A2E9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{127E3DEE-A4D3-4943-98D6-26679C1A2E9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{127E3DEE-A4D3-4943-98D6-26679C1A2E9F}.Release|Any CPU.ActiveCfg = Release|Any CPU

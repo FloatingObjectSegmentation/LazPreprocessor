@@ -25,10 +25,10 @@ namespace core
                         "DATA ascii" + "\n" +
                         "{1}" + "\n";
 
-        public static string ExecXYZ(string filepath) {
+        public static string ExecXYZ(string filepath, string separator = " ") {
             string[] lines = File.ReadAllLines(filepath);
             for (int i = 0; i < lines.Length; i++) {
-                string[] parts = lines[i].Split(" ");
+                string[] parts = lines[i].Split(separator);
                 double x = double.Parse(parts[0]);
                 double y = double.Parse(parts[1]);
                 double z = double.Parse(parts[2]);
