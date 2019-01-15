@@ -29,6 +29,7 @@ namespace augmentation_sampler
         static string rbnn_exe_location = @"C:\Users\km\source\repos\LazPreprocessor\core\resources";
         static string underground_filter_exe_location = "";
 
+        static float candidateContextRadius = 25.0f; // in meters
         static int ObjectsToAdd = 500;
         #endregion
 
@@ -75,6 +76,7 @@ namespace augmentation_sampler
         {
             minBound = Tools.FindMinimumVector(Path.Combine(TxtDatasetFileDirectory, TxtDatasetFileName));
             maxBound = Tools.FindMaximumVector(Path.Combine(TxtDatasetFileDirectory, TxtDatasetFileName));
+            maxBound.Z += candidateContextRadius;
             ObjectSampler samp = new ObjectSampler();
             samp.UnfilteredSampleObjects(ObjectsToAdd, minBound, maxBound);
             samples = samp.samples;
