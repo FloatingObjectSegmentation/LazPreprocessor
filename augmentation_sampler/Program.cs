@@ -16,7 +16,11 @@ namespace augmentation_sampler
         static string TxtDatasetFileDirectory = @"C:\Users\km\Desktop\MAG\floatingObjectFilter\data";
         static string TxtDatasetFileName = "459_99.txt";
 
-        
+        // source dataset DMR
+        static string DmrDirectory = @"C:\Users\km\Desktop\MAG\FloatingObjectFilter\data\dmr";
+        static string DmrFileName = "459_99.txt";
+
+
         ///  augmentation
         static int ObjectsToAdd = 500;
         // saving location of augmentables
@@ -26,6 +30,7 @@ namespace augmentation_sampler
         // required tool locations
         static string overlaptool_exe_location = @"C:\Users\km\source\repos\LazPreprocessor\augmentation_sampler\resources";
         static string rbnn_exe_location = @"C:\Users\km\source\repos\LazPreprocessor\core\resources";
+        static string underground_filter_exe_location = "";
         
         
 
@@ -46,6 +51,15 @@ namespace augmentation_sampler
             UnfilteredSampleObjects();
             FilterSampleObjects();
             ComputeRbnnMinVals();
+
+            string str = SamplesToString();
+            File.WriteAllText(Path.Combine(SamplesFileDirectory, SamplesFileName), str);
+            PowerShell.Execute(underground_filter_exe_location + "\\underground_filter.exe "
+                + DmrDirectory +         " " + DmrFileName + " "
+                + SamplesFileDirectory + " " + SamplesFileName);
+            DiscardFilteredExamples("underground");
+
+
             SaveResults();
         }
 
@@ -61,9 +75,10 @@ namespace augmentation_sampler
 
         private static void FilterSampleObjects()
         {
-            string str = UnfilteredSamplesToString();
+            string str = SamplesToString();
             FilterWithOverlapTool(str);
-            DiscardFilteredExamples();
+            DiscardFilteredExamples("result");
+            
         }
 
         private static void ComputeRbnnMinVals()
@@ -236,9 +251,9 @@ namespace augmentation_sampler
             return BoundingBoxPoints;
         }
 
-        private static void DiscardFilteredExamples()
+        private static void DiscardFilteredExamples(string prefix)
         {
-            string result = File.ReadAllText(Path.Combine(SamplesFileDirectory, "result" + SamplesFileName));
+            string result = File.ReadAllText(Path.Combine(SamplesFileDirectory, prefix + SamplesFileName));
             List<int> indicesOfDiscarded = new List<int>((result.Split(" ").Select((x) => int.Parse(x))));
             HashSet<int> setIndicesOfDiscarded = new HashSet<int>(indicesOfDiscarded);
 
@@ -272,7 +287,7 @@ namespace augmentation_sampler
             return result_file;
         }
 
-        private static string UnfilteredSamplesToString()
+        private static string SamplesToString()
         {
             string str = "";
             for (int i = 0; i < locations.Count; i++)
