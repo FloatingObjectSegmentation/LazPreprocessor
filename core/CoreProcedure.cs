@@ -67,7 +67,7 @@ namespace core
 
         private void ExecuteRbnnFromPcdFile()
         {
-            string rbnn_result_filepath = RbnnDriver.Execute(rbnn_exe_location, pcd_path, radius_values);
+            string rbnn_result_filepath = RbnnDriver.Execute(rbnn_exe_location, pcd_path, "result", radius_values);
         }
         #endregion
     }

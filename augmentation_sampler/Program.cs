@@ -93,19 +93,6 @@ namespace augmentation_sampler
             
             Dictionary<string, RbnnResult> results = ComputeRbnn(filepath);
 
-            /*foreach (KeyValuePair<String, RbnnResult> q in results)
-            {
-
-                RbnnResult r = q.Value;
-                for (int i = 0; i < r.clusterIndices.Count; i++)
-                {
-                    if (r.clusterIndices[i] != -1)
-                        Console.WriteLine(i + " " + r.clusterIndices[i]);
-                }
-
-            }*/
-            // end debug only
-
             ComputeRbnnMinVals(nextIndex, lowestIndex, LidarPointIndexToSampleIndex, results);
         }
 
@@ -195,7 +182,7 @@ namespace augmentation_sampler
 
         private static Dictionary<string, RbnnResult> ComputeRbnn(string filepath)
         {
-            filepath = RbnnDriver.ExecuteTxt(rbnn_exe_location, filepath, common.Numpy.LinSpace(2, 15, 10).ToArray());
+            filepath = RbnnDriver.ExecuteTxt(rbnn_exe_location, filepath, "result", common.Numpy.LinSpace(2, 15, 10).ToArray());
 
             // retrieve results
             RbnnResultParser parser = new RbnnResultParser();

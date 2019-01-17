@@ -18,6 +18,7 @@ namespace augmentation_sampler
             Setup();
         }
 
+        #region [API]
         public void UnfilteredSampleObjects(int ObjectsToAdd, Vector3 minWorldBound, Vector3 maxWorldBound)
         {
             for (int i = 0; i < 10 * ObjectsToAdd; i++)
@@ -32,14 +33,15 @@ namespace augmentation_sampler
                 maxDims.Add(Math.Max(Math.Max(curr.sizeMeters.X, curr.sizeMeters.Y), curr.sizeMeters.Z));
             }
         }
+        #endregion
 
         #region [sampling]
         private void Setup()
         {
             AugmentableObjects = new Dictionary<int, AugmentableObject>();
-            AugmentableObjects.Add(0, new AugmentableObject("BIRD", 0.3f, 1.0f, new Vector3(1.0f, 1.5f, 0.2f)));
-            AugmentableObjects.Add(1, new AugmentableObject("AIRPLANE", 10.0f, 50.0f, new Vector3(1.0f, 1.2f, 0.2f)));
-            AugmentableObjects.Add(2, new AugmentableObject("BALLOON", 5.0f, 15.0f, new Vector3(1.0f, 1.0f, 2.5f)));
+            AugmentableObjects.Add(0, new AugmentableObject("BIRD", 3f, 10f, new Vector3(1.0f, 1.5f, 0.2f)));
+            AugmentableObjects.Add(1, new AugmentableObject("AIRPLANE", 30.0f, 50.0f, new Vector3(1.0f, 1.2f, 0.2f)));
+            AugmentableObjects.Add(2, new AugmentableObject("BALLOON", 50.0f, 70.0f, new Vector3(1.0f, 1.0f, 2.5f)));
         }
 
         private AugmentableObjectSample SampleObject()
