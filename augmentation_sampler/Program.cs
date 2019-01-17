@@ -22,7 +22,7 @@ namespace augmentation_sampler
         
         // saving location of augmentables
         static string SamplesFileDirectory = @"C:\Users\km\Desktop\LIDAR_WORKSPACE\augmentation";
-        static string SamplesFileName = "kurac.txt";
+        static string SamplesFileName = "augmentation_result.txt";
 
         // required tool locations
         static string overlaptool_exe_location = @"C:\Users\km\source\repos\LazPreprocessor\augmentation_sampler\resources";
@@ -124,6 +124,8 @@ namespace augmentation_sampler
             int currid = 0;
             for (int i = 0; i < samples.Count; i++)
             {
+                if (RbnnMinValsPerObject[i] == 0.0) continue; // skip those that touch the transitive ground
+
                 List<string> vals = new List<string>();
 
                 string id = currid.ToString();
