@@ -5,6 +5,7 @@ using System.IO;
 using si.birokrat.next.common.shell;
 using System.Linq;
 using core;
+using common;
 
 namespace augmentation_sampler
 {
@@ -13,21 +14,21 @@ namespace augmentation_sampler
 
         #region [config]
         // source lidar dataset
-        static string TxtDatasetFileDirectory = @"C:\Users\km\Desktop\LIDAR_WORKSPACE\lidar";
-        static string TxtDatasetFileName = "449_121.txt";
+        static string TxtDatasetFileDirectory = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.LIDAR_SUBDIR);
+        static string TxtDatasetFileName = GConfig.CHUNK + ".txt";
 
         // source dataset DMR
-        static string DmrDirectory = @"C:\Users\km\Desktop\LIDAR_WORKSPACE\dmr";
-        static string DmrFileName = "449_121.txt";
+        static string DmrDirectory = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.DMR_SUBDIR);
+        static string DmrFileName = GConfig.CHUNK + ".txt";
         
         // saving location of augmentables
-        static string SamplesFileDirectory = @"C:\Users\km\Desktop\LIDAR_WORKSPACE\augmentation";
+        static string SamplesFileDirectory = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.AUGMENTATION_SUBDIR);
         static string SamplesFileName = "augmentation_result.txt";
 
         // required tool locations
-        static string overlaptool_exe_location = @"C:\Users\km\source\repos\LazPreprocessor\augmentation_sampler\resources";
-        static string rbnn_exe_location = @"C:\Users\km\source\repos\LazPreprocessor\core\resources";
-        static string underground_filter_exe_location = "";
+        static string overlaptool_exe_location = GConfig.TOOL_OVERLAP_COMPUTE_PATH;
+        static string rbnn_exe_location = GConfig.TOOL_RBNN_PATH;
+        static string underground_filter_exe_location = GConfig.TOOL_UNDERGROUND_FILTER_PATH;
 
         static float candidateContextRadius = 25.0f; // in meters
         static int ObjectsToAdd = 500;
@@ -44,7 +45,6 @@ namespace augmentation_sampler
 
         static void Main(string[] args)
         {
-            
             Tools.Time(UnfilteredSampleObjects);
             Tools.Time(FilterSampleObjects);
             Tools.Time(ComputeRbnnMinVals);

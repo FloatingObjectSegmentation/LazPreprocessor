@@ -1,4 +1,5 @@
-﻿using System;
+﻿using common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -20,7 +21,7 @@ namespace core
 
         #region [config]
         static double[] radius_values = { 1, 2, 3, 4, 5, 8 };
-        static string rbnn_exe_location = @"C:\Users\km\source\repos\LazPreprocessor\core\resources";
+        static string rbnn_exe_location = GConfig.TOOL_RBNN_PATH;
         #endregion
 
         #region [members]

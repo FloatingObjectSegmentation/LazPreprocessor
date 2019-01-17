@@ -17,35 +17,23 @@ using RestSharp;
 using RestSharp.Deserializers;
 using RestSharp.Serialization.Json;
 using Point = System.Windows.Point;
-
+using common;
 //
 
 namespace downloader
 {
-    public enum TypeOfExecution
-    {
-        Range2D = 1,
-        CherryPick = 2
-    }
-
     internal class SlemenikDownloader
     {
 
         #region [config]
         // which ones to get
         private static readonly int[] SlovenianMapBounds = { 449, 121, 449, 121 }; //minx,miny,maxx,maxy in thousand, manualy set based on ARSO website
-        private static List<List<int>> CherryPicked;
-        static void FillCherryPicked() {
-            CherryPicked = new List<List<int>>();
-            CherryPicked.Add(new List<int> { 449, 121 });
-        }
-
-        static TypeOfExecution ExecType = TypeOfExecution.CherryPick;
-
+        private static List<List<int>> DesiredChunks;
         // paths
         private static readonly string ResourceDirectoryPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent?.FullName + "\\resources\\";
-        private static readonly string LidarFilesSavePath = @"C:\Users\km\Desktop\LIDAR_WORKSPACE\lidar\";
-        private static readonly string DmrDirectoryPath = @"C:\Users\km\Desktop\LIDAR_WORKSPACE\dmr\";
+        private static readonly string LidarFilesSavePath = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.LIDAR_SUBDIR);
+
+        private static readonly string DmrDirectoryPath = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.DMR_SUBDIR);
         #endregion
 
         #region [aux vars]
@@ -63,40 +51,30 @@ namespace downloader
         {
             Console.WriteLine("[{0:hh:mm:ss}] Start program. ", DateTime.Now);
             Console.WriteLine("[{0:hh:mm:ss}] Searching for valid ARSO Urls...", DateTime.Now);
-            FillCherryPicked();
 
-            switch (ExecType)
+            switch (GConfig.TYPE_OF_EXEC)
             {
                 case TypeOfExecution.Range2D:
-                    ExecuteRange2D();
+                    //DesiredChunks = GConfig.GetRange2D();
                     break;
                 case TypeOfExecution.CherryPick:
-                    ExecuteCherryPick();
+                    //DesiredChunks = GConfig.CherryPicked();
+                    break;
+                case TypeOfExecution.Single:
+                    DesiredChunks = GConfig.CHUNK_VAL();
                     break;
             }
-
+            Execute();
             Console.WriteLine("[{0:hh:mm:ss}] End program.", DateTime.Now);
         }
 
 
         #region [aux]
-        private static void ExecuteRange2D()
+        private static void Execute()
         {
             _addedBlocs = 0;
-            for (var x = SlovenianMapBounds[0]; x <= SlovenianMapBounds[2]; x++)
-            {
-                for (var y = SlovenianMapBounds[1]; y <= SlovenianMapBounds[3]; y++)
-                {
-                    DownloadData(x, y);
-                }
-            }
-        }
-
-        private static void ExecuteCherryPick()
-        {
-            _addedBlocs = 0;
-            for (int i = 0; i < CherryPicked.Count; i++)
-                DownloadData(CherryPicked[i][0], CherryPicked[i][1]);
+            for (int i = 0; i < DesiredChunks.Count; i++)
+                DownloadData(DesiredChunks[i][0], DesiredChunks[i][1]);
 
         }
 

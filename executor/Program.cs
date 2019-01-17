@@ -1,13 +1,13 @@
 ﻿using System;
 using System.IO;
 using core;
-
+using common;
 
 namespace Executor
 {
     class Program
     {
-        static string folder = @"C:\Users\km\Desktop\LIDAR_WORKSPACE\lidar";
+        static string folder = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.LIDAR_SUBDIR);
 
         static void Main(string[] args)
         {
