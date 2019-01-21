@@ -42,6 +42,8 @@ namespace downloader
         private static int _bottomLeftY;
         private static int _addedBlocs;
         static string current = "";
+        private const string tempfile1name = "laz12.laz";
+        private const string tempfile2name = "laz13.laz";
         #endregion
 
         public static void Main()
@@ -62,6 +64,7 @@ namespace downloader
                     break;
             }
             Execute();
+            DeleteTempFiles();
             Console.WriteLine("[{0:hh:mm:ss}] End program.", DateTime.Now);
         }
 
@@ -71,7 +74,9 @@ namespace downloader
         {
             _addedBlocs = 0;
             for (int i = 0; i < DesiredChunks.Count; i++)
+            {
                 DownloadData(DesiredChunks[i][0], DesiredChunks[i][1]);
+            }
 
         }
 
@@ -96,6 +101,11 @@ namespace downloader
             SetParameters(lidarUrl);
             Las12ToLas13();
             EnrichLazWithRGBSAndNormals();
+        }
+
+        private static void DeleteTempFiles() {
+            File.Delete(Path.Combine(LidarFilesSavePath, tempfile1name));
+            File.Delete(Path.Combine(LidarFilesSavePath, tempfile2name));
         }
         #endregion
 
@@ -161,7 +171,7 @@ namespace downloader
             Uri uri = new Uri(lidarUrl);
             Console.Write("[{0:hh:mm:ss}] Downloading Laz from ARSO...", DateTime.Now);
             WebClient client = new WebClient();
-            client.DownloadFile(uri, LidarFilesSavePath + "laz12.laz");
+            client.DownloadFile(uri, LidarFilesSavePath + tempfile1name);
             Console.WriteLine("[DONE]");
         }
 
@@ -190,7 +200,7 @@ namespace downloader
         {
             var lazReader = new laszip_dll();
             var compressed = true;
-            var filePath = LidarFilesSavePath + "laz13.laz";
+            var filePath = LidarFilesSavePath + tempfile2name;
 
             lazReader.laszip_open_reader(filePath, ref compressed);
             var numberOfPoints = lazReader.header.number_of_point_records;
@@ -280,7 +290,7 @@ namespace downloader
             var start = new ProcessStartInfo
             {
                 Arguments = "-i \"" + LidarFilesSavePath +
-                          "laz12.laz\" -set_point_type 5 -set_version 1.3 -o \"" + LidarFilesSavePath + "laz13.laz\"",
+                          $"{tempfile1name}\" -set_point_type 5 -set_version 1.3 -o \"" + LidarFilesSavePath + $"{tempfile2name}\"",
                 FileName = ResourceDirectoryPath + "las2las",
                 WindowStyle = ProcessWindowStyle.Hidden,
                 CreateNoWindow = false
