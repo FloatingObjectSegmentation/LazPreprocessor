@@ -8,6 +8,8 @@ using core;
 using common;
 using common.structs;
 using external_tools.rbnn;
+using external_tools.underground_filter;
+using external_tools.overlap_filter;
 
 namespace augmentation_sampler
 {
@@ -26,11 +28,6 @@ namespace augmentation_sampler
         // saving location of augmentables
         static string SamplesFileDirectory = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.AUGMENTATION_SUBDIR);
         static string SamplesFileName = "augmentation_result.txt";
-
-        // required tool locations
-        static string overlaptool_exe_location = GConfig.TOOL_OVERLAP_COMPUTE_PATH;
-        static string rbnn_exe_location = GConfig.TOOL_RBNN_PATH;
-        static string underground_filter_exe_location = GConfig.TOOL_UNDERGROUND_FILTER_PATH;
         #endregion
 
         #region [computed]
@@ -98,9 +95,7 @@ namespace augmentation_sampler
         private static void FilterUndergroundPoints() {
             string str = SamplesToString();
             File.WriteAllText(Path.Combine(SamplesFileDirectory, SamplesFileName), str);
-            PowerShell.Execute(underground_filter_exe_location + "\\underground_filter.exe "
-                + DmrDirectory + " " + DmrFileName + " "
-                + SamplesFileDirectory + " " + SamplesFileName);
+            UndergroundFilterDriver.Execute(Path.Combine(DmrDirectory, DmrFileName), Path.Combine(SamplesFileDirectory, SamplesFileName));
             DiscardFilteredExamples("underground");
         }
 
@@ -181,7 +176,7 @@ namespace augmentation_sampler
 
         private static Dictionary<string, RbnnResult> ComputeRbnn(string filepath)
         {
-            filepath = RbnnDriver.ExecuteTxt(rbnn_exe_location, filepath, GConfig.rbnn_augmentation_result_prefix, GConfig.AUGMENTATION_RBNN_R_SPAN);
+            filepath = RbnnDriver.ExecuteTxt(filepath, GConfig.rbnn_augmentation_result_prefix, GConfig.AUGMENTATION_RBNN_R_SPAN);
 
             // retrieve results
             RbnnResultParser parser = new RbnnResultParser();
@@ -257,7 +252,7 @@ namespace augmentation_sampler
         {
             File.WriteAllText(Path.Combine(SamplesFileDirectory, SamplesFileName), str);
 
-            PowerShell.Execute(overlaptool_exe_location + "\\overlap_compute.exe " + SamplesFileDirectory + " " + SamplesFileName);
+            OverlapFilterDriver.Execute(Path.Combine(SamplesFileDirectory, SamplesFileName));
 
             string result_file = Path.Combine(SamplesFileDirectory, "result" + SamplesFileName);
             return result_file;

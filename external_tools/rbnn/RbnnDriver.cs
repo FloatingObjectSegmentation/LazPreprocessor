@@ -16,7 +16,7 @@ namespace external_tools.rbnn
     {
 
         #region [API]
-        public static string ExecuteParallelTxt(string rbnn_exe_location, string filepath, string resultfile_prefix, double[] radius_values, int cores)
+        public static string ExecuteParallelTxt(string filepath, string resultfile_prefix, double[] radius_values, int cores)
         {
 
             List<List<double>> rbnn_r_batches = MyCollections.Split<double>(
@@ -24,15 +24,15 @@ namespace external_tools.rbnn
                                         (int)Math.Ceiling((decimal)radius_values.Length / (decimal)cores))
                                         .Select(x => x.ToList()).ToList();
             
-            ExecEachValInOwnThread(rbnn_exe_location, filepath, rbnn_r_batches);
+            ExecEachValInOwnThread(GConfig.TOOL_RBNN_PATH, filepath, rbnn_r_batches);
             
             string resultfilepath = CombineToOneFileAndDeleteOthers(filepath, resultfile_prefix, cores);
             return resultfilepath;
         }
         
-        public static string ExecuteTxt(string rbnn_exe_location, string filepath, string resultfile_prefix, double[] radius_values) {
+        public static string ExecuteTxt(string filepath, string resultfile_prefix, double[] radius_values) {
             string newFileName = Txt2Pcd.ExecXYZ(filepath);
-            Execute(rbnn_exe_location, newFileName, resultfile_prefix, radius_values);
+            Execute(newFileName, resultfile_prefix, radius_values);
             File.Delete(newFileName);
             
             return Path.Combine(Path.GetDirectoryName(filepath), resultfile_prefix) + Path.GetFileName(filepath).Replace(".txt", ".pcd");
@@ -41,10 +41,10 @@ namespace external_tools.rbnn
         /// <summary>
         /// accepts a .pcd file, returns the result filepath
         /// </summary>
-        public static string Execute(string rbnn_exe_location, string filepath, string resultfile_prefix, double[] radius_values) {
+        public static string Execute(string filepath, string resultfile_prefix, double[] radius_values) {
 
             string pshcmd = String.Format("{0}\\rbnn.exe {1} {2} {3} ",
-                                                     rbnn_exe_location,
+                                                     GConfig.TOOL_RBNN_PATH,
                                                      Path.GetDirectoryName(filepath),
                                                      Path.GetFileName(filepath),
                                                      resultfile_prefix);
@@ -78,7 +78,7 @@ namespace external_tools.rbnn
             tasks = tasks.Select((x, i) =>
                 Task.Factory.StartNew(() =>
                 {
-                    ExecuteTxt(rbnn_exe_location, get_result_filepath(i.ToString(), filepath), "", rbnn_batches[i].ToArray());
+                    ExecuteTxt(get_result_filepath(i.ToString(), filepath), "", rbnn_batches[i].ToArray());
                     barrier.SignalAndWait();
                 })).ToArray();
             

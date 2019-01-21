@@ -8,11 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="underground_filter\" />
-    <Folder Include="overlap_filter\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\common\common.csproj" />
   </ItemGroup>
 

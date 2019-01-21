@@ -24,7 +24,6 @@ namespace core
 
         #region [config]
         static double[] radius_values = GConfig.RBNN_R_VALUES;
-        static string rbnn_exe_location = GConfig.TOOL_RBNN_PATH;
         #endregion
 
         #region [members]
@@ -71,7 +70,7 @@ namespace core
 
         private void ExecuteRbnnFromPcdFile()
         {
-            string rbnn_result_filepath = RbnnDriver.Execute(rbnn_exe_location, pcd_path, GConfig.rbnn_core_result_prefix, radius_values);
+            string rbnn_result_filepath = RbnnDriver.Execute(pcd_path, GConfig.rbnn_core_result_prefix, radius_values);
         }
         #endregion
     }
