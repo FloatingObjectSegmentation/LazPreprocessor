@@ -64,6 +64,9 @@ namespace common
         #endregion
 
         #region [core]
+        public static string class_filename_suffix = "class";
+        public static string intensity_filename_suffix = "intensity";
+        public static string rbnn_core_result_prefix = "rbnnresult";
         public static double[] RBNN_R_VALUES = { 3 };
         #endregion
 
@@ -71,6 +74,7 @@ namespace common
         public static float candidateContextRadius = 25.0f; // in meters
         public static int ObjectsToAdd = 500;
         public static double[] AUGMENTATION_RBNN_R_SPAN = Numpy.LinSpace(2, 2, 1).ToArray();
+        public static string rbnn_augmentation_result_prefix = "rbnnaugresult";
         public static Dictionary<int, AugmentableObject> GetAugmentableObjectPallette()
         {
             Dictionary<int, AugmentableObject> AugmentableObjects = new Dictionary<int, AugmentableObject>();

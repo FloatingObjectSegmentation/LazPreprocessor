@@ -180,7 +180,7 @@ namespace augmentation_sampler
 
         private static Dictionary<string, RbnnResult> ComputeRbnn(string filepath)
         {
-            filepath = RbnnDriver.ExecuteTxt(rbnn_exe_location, filepath, "result", GConfig.AUGMENTATION_RBNN_R_SPAN);
+            filepath = RbnnDriver.ExecuteTxt(rbnn_exe_location, filepath, GConfig.rbnn_augmentation_result_prefix, GConfig.AUGMENTATION_RBNN_R_SPAN);
 
             // retrieve results
             RbnnResultParser parser = new RbnnResultParser();

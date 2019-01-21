@@ -53,8 +53,8 @@ namespace core
         #region [auxiliary]
         void CreateRGBClassIntensityTxtFilesFromLaz() {
            txt_path = filepath.Replace(".laz", ".txt").Replace(".las", ".txt");
-           txt_class_path = filepath.Replace(".laz", "class.txt").Replace(".las", "class.txt");
-           string txt_intensity_path = filepath.Replace(".laz", "intensity.txt").Replace(".las", "intensity.txt");
+           txt_class_path = filepath.Replace(".laz", $"{GConfig.class_filename_suffix}.txt").Replace(".las", $"{GConfig.class_filename_suffix}.txt");
+           string txt_intensity_path = filepath.Replace(".laz", $"{GConfig.intensity_filename_suffix}.txt").Replace(".las", $"{GConfig.intensity_filename_suffix}.txt");
            Las2Txt.Exec(Path.GetDirectoryName(filepath), filepath, txt_path, attributes_basic);
            Las2Txt.Exec(Path.GetDirectoryName(filepath), filepath, txt_class_path, attributes_class);
            Las2Txt.Exec(Path.GetDirectoryName(filepath), filepath, txt_intensity_path, "i");
@@ -69,7 +69,7 @@ namespace core
 
         private void ExecuteRbnnFromPcdFile()
         {
-            string rbnn_result_filepath = RbnnDriver.Execute(rbnn_exe_location, pcd_path, "result", radius_values);
+            string rbnn_result_filepath = RbnnDriver.Execute(rbnn_exe_location, pcd_path, GConfig.rbnn_core_result_prefix, radius_values);
         }
         #endregion
     }
