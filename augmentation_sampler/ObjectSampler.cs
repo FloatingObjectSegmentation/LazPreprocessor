@@ -14,8 +14,8 @@ namespace augmentation_sampler
         static Dictionary<int, AugmentableObject> AugmentableObjects;
 
         public List<AugmentableObjectSample> samples = new List<AugmentableObjectSample>();
-        public List<Vector3> locations = new List<Vector3>();
-        public List<float> maxDims = new List<float>();
+        public Vector3 minWorldBound;
+        public Vector3 maxWorldBound;
 
         public ObjectSampler() {
             AugmentableObjects = GConfig.GetAugmentableObjectPallette();
@@ -24,16 +24,13 @@ namespace augmentation_sampler
         #region [API]
         public void UnfilteredSampleObjects(int ObjectsToAdd, Vector3 minWorldBound, Vector3 maxWorldBound)
         {
+            this.minWorldBound = minWorldBound;
+            this.maxWorldBound = maxWorldBound;
+
             for (int i = 0; i < 10 * ObjectsToAdd; i++)
             {
                 AugmentableObjectSample curr = SampleObject();
-
-                // sample point
-                Vector3 location = SampleLocation(minWorldBound, maxWorldBound);
-
                 samples.Add(curr);
-                locations.Add(location);
-                maxDims.Add(Math.Max(Math.Max(curr.sizeMeters.X, curr.sizeMeters.Y), curr.sizeMeters.Z));
             }
         }
         #endregion
@@ -47,8 +44,9 @@ namespace augmentation_sampler
 
             float dimension = (float)((new Random().NextDouble()) * (curr.maxDimMeters - curr.minDimMeters) + curr.minDimMeters);
             Vector3 size = Vector3.Multiply(dimension, curr.proportions);
+            Vector3 location = SampleLocation(minWorldBound, maxWorldBound);
 
-            return new AugmentableObjectSample(curr.name, size);
+            return new AugmentableObjectSample(curr.name, size, location, Math.Max(Math.Max(size.X, size.Y), size.Z));
         }
 
         private Vector3 SampleLocation(Vector3 minBound, Vector3 maxBound)
