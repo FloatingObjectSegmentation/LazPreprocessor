@@ -20,7 +20,7 @@ namespace augmentation_sampler
 
         // source dataset DMR
         static string DmrDirectory = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.DMR_SUBDIR);
-        static string DmrFileName = GConfig.CHUNK + ".txt";
+        static string DmrFileName = GConfig.CHUNK;
         
         // saving location of augmentables
         static string SamplesFileDirectory = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.AUGMENTATION_SUBDIR);
@@ -30,8 +30,6 @@ namespace augmentation_sampler
         static string overlaptool_exe_location = GConfig.TOOL_OVERLAP_COMPUTE_PATH;
         static string rbnn_exe_location = GConfig.TOOL_RBNN_PATH;
         static string underground_filter_exe_location = GConfig.TOOL_UNDERGROUND_FILTER_PATH;
-        
-        static int ObjectsToAdd = 500;
         #endregion
 
         #region [computed]
@@ -182,7 +180,7 @@ namespace augmentation_sampler
 
         private static Dictionary<string, RbnnResult> ComputeRbnn(string filepath)
         {
-            filepath = RbnnDriver.ExecuteTxt(rbnn_exe_location, filepath, "result", common.Numpy.LinSpace(2, 15, 10).ToArray());
+            filepath = RbnnDriver.ExecuteTxt(rbnn_exe_location, filepath, "result", GConfig.AUGMENTATION_RBNN_R_SPAN);
 
             // retrieve results
             RbnnResultParser parser = new RbnnResultParser();

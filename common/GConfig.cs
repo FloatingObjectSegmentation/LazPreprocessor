@@ -1,6 +1,7 @@
 ﻿using common.structs;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Text;
 
@@ -69,6 +70,7 @@ namespace common
         #region [augmentation_sampler]
         public static float candidateContextRadius = 25.0f; // in meters
         public static int ObjectsToAdd = 500;
+        public static double[] AUGMENTATION_RBNN_R_SPAN = Numpy.LinSpace(2, 2, 1).ToArray();
         public static Dictionary<int, AugmentableObject> GetAugmentableObjectPallette()
         {
             Dictionary<int, AugmentableObject> AugmentableObjects = new Dictionary<int, AugmentableObject>();
