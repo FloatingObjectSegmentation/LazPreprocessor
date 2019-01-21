@@ -7,6 +7,7 @@ using System.Linq;
 using core;
 using common;
 using common.structs;
+using external_tools.rbnn;
 
 namespace augmentation_sampler
 {

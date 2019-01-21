@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using external_tools.rbnn;
+using external_tools.transforms;
 
 namespace core
 {

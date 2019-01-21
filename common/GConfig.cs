@@ -17,9 +17,9 @@ namespace common
         public const string DMR_SUBDIR = "dmr";
         
         // tool paths
-        public const string TOOL_RBNN_PATH = @"C:\Users\km\source\repos\LazPreprocessor\core\resources";
-        public const string TOOL_OVERLAP_COMPUTE_PATH = @"C:\Users\km\source\repos\LazPreprocessor\augmentation_sampler\resources";
-        public const string TOOL_UNDERGROUND_FILTER_PATH = @"C:\Users\km\source\repos\LazPreprocessor\augmentation_sampler\resources";
+        public const string TOOL_RBNN_PATH = @"C:\Users\km\source\repos\LazPreprocessor\external_tools\resources";
+        public const string TOOL_OVERLAP_COMPUTE_PATH = @"C:\Users\km\source\repos\LazPreprocessor\external_tools\resources";
+        public const string TOOL_UNDERGROUND_FILTER_PATH = @"C:\Users\km\source\repos\LazPreprocessor\external_tools\resources";
         #endregion
 
         #region [downloader]

@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace core
+namespace external_tools.transforms
 {
-    class Las2Txt
+    public class Las2Txt
     {
         public static void Exec(string folder_name, string filepath, string outpath, string attributes)
         {

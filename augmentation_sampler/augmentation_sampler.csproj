@@ -10,8 +10,4 @@
     <ProjectReference Include="..\core\core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="resources\" />
-  </ItemGroup>
-
 </Project>

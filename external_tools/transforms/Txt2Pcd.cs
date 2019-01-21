@@ -4,9 +4,9 @@ using System.Text;
 
 using System.IO;
 
-namespace core
+namespace external_tools.transforms
 {
-    class Txt2Pcd
+    public class Txt2Pcd
     {
         /*
         ASSUMPTION: input file is xyzRGB where scope of RGB is 0 - 65536 
