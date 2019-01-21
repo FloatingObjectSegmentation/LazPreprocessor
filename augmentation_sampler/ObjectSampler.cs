@@ -1,4 +1,7 @@
-﻿using System;
+﻿using common.structs;
+using common;
+
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
@@ -15,7 +18,7 @@ namespace augmentation_sampler
         public List<float> maxDims = new List<float>();
 
         public ObjectSampler() {
-            Setup();
+            AugmentableObjects = GConfig.GetAugmentableObjectPallette();
         }
 
         #region [API]
@@ -36,14 +39,6 @@ namespace augmentation_sampler
         #endregion
 
         #region [sampling]
-        private void Setup()
-        {
-            AugmentableObjects = new Dictionary<int, AugmentableObject>();
-            AugmentableObjects.Add(0, new AugmentableObject("BIRD", 3f, 10f, new Vector3(1.0f, 1.5f, 0.2f)));
-            AugmentableObjects.Add(1, new AugmentableObject("AIRPLANE", 30.0f, 50.0f, new Vector3(1.0f, 1.2f, 0.2f)));
-            AugmentableObjects.Add(2, new AugmentableObject("BALLOON", 50.0f, 70.0f, new Vector3(1.0f, 1.0f, 2.5f)));
-        }
-
         private AugmentableObjectSample SampleObject()
         {
             // sample object type, size
@@ -65,35 +60,4 @@ namespace augmentation_sampler
         }
         #endregion
     }
-
-    #region [classes]
-    public class AugmentableObject
-    {
-
-        public string name;
-        public float minDimMeters;
-        public float maxDimMeters;
-        public Vector3 proportions;
-
-        public AugmentableObject(string name, float minDimMeters, float maxDimMeters, Vector3 proportions)
-        {
-            this.name = name;
-            this.minDimMeters = minDimMeters;
-            this.maxDimMeters = maxDimMeters;
-            this.proportions = proportions;
-        }
-    }
-
-    public class AugmentableObjectSample
-    {
-        public string name;
-        public Vector3 sizeMeters;
-
-        public AugmentableObjectSample(string name, Vector3 sizeMeters)
-        {
-            this.name = name;
-            this.sizeMeters = sizeMeters;
-        }
-    }
-    #endregion
 }

@@ -9,18 +9,19 @@ namespace core
     public class CoreProcedure
     {
         /*
-        Takes a folder full of laz files. For each of the
-        laz files it will produce the following files in the 
-        directory in which the laz files reside:
+        Takes a laz file. it will produce the following files in the 
+        directory in which the laz file resides:
             - xyzRGB txt file
             - c txt file (the classes to which each point belongs to)
             - floating object class txt file (in each line only one entry
               -1 = not a floating objects, anything else is the cluster to
               which the floating object belongs)
+
+        Also takes a dmr file and creates a pcd dmr file.
         */
 
         #region [config]
-        static double[] radius_values = { 3 };
+        static double[] radius_values = GConfig.RBNN_R_VALUES;
         static string rbnn_exe_location = GConfig.TOOL_RBNN_PATH;
         #endregion
 

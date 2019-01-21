@@ -9,9 +9,6 @@ namespace augmentation_sampler
 {
     public static class Tools
     {
-
-        
-
         public static void Time(Action a) {
             DateTime dt = DateTime.Now;
             a();

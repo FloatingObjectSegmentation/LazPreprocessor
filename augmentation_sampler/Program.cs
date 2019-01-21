@@ -6,6 +6,7 @@ using si.birokrat.next.common.shell;
 using System.Linq;
 using core;
 using common;
+using common.structs;
 
 namespace augmentation_sampler
 {
@@ -29,8 +30,7 @@ namespace augmentation_sampler
         static string overlaptool_exe_location = GConfig.TOOL_OVERLAP_COMPUTE_PATH;
         static string rbnn_exe_location = GConfig.TOOL_RBNN_PATH;
         static string underground_filter_exe_location = GConfig.TOOL_UNDERGROUND_FILTER_PATH;
-
-        static float candidateContextRadius = 25.0f; // in meters
+        
         static int ObjectsToAdd = 500;
         #endregion
 
@@ -60,9 +60,9 @@ namespace augmentation_sampler
         {
             minBound = Tools.FindMinimumVector(Path.Combine(TxtDatasetFileDirectory, TxtDatasetFileName));
             maxBound = Tools.FindMaximumVector(Path.Combine(TxtDatasetFileDirectory, TxtDatasetFileName));
-            maxBound.Z += candidateContextRadius;
+            maxBound.Z += GConfig.candidateContextRadius;
             ObjectSampler samp = new ObjectSampler();
-            samp.UnfilteredSampleObjects(ObjectsToAdd, minBound, maxBound);
+            samp.UnfilteredSampleObjects(GConfig.ObjectsToAdd, minBound, maxBound);
             samples = samp.samples;
             locations = samp.locations;
             maxDims = samp.maxDims;

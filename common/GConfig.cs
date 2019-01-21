@@ -1,11 +1,14 @@
-﻿using System;
+﻿using common.structs;
+using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 
 namespace common
 {
     public static class GConfig
     {
+        #region [global]
         // workspace dirs
         public const string WORKSPACE_DIR = @"E:\workspaces\LIDAR_WORKSPACE";
         public const string LIDAR_SUBDIR = "lidar";
@@ -16,7 +19,9 @@ namespace common
         public const string TOOL_RBNN_PATH = @"C:\Users\km\source\repos\LazPreprocessor\core\resources";
         public const string TOOL_OVERLAP_COMPUTE_PATH = @"C:\Users\km\source\repos\LazPreprocessor\augmentation_sampler\resources";
         public const string TOOL_UNDERGROUND_FILTER_PATH = @"C:\Users\km\source\repos\LazPreprocessor\augmentation_sampler\resources";
-        
+        #endregion
+
+        #region [downloader]
         //// exec type
         public const TypeOfExecution TYPE_OF_EXEC = TypeOfExecution.Single;
 
@@ -55,6 +60,25 @@ namespace common
             outer.Add(some);
             return outer;
         }
+        #endregion
+
+        #region [core]
+        public static double[] RBNN_R_VALUES = { 3 };
+        #endregion
+
+        #region [augmentation_sampler]
+        public static float candidateContextRadius = 25.0f; // in meters
+        public static int ObjectsToAdd = 500;
+        public static Dictionary<int, AugmentableObject> GetAugmentableObjectPallette()
+        {
+            Dictionary<int, AugmentableObject> AugmentableObjects = new Dictionary<int, AugmentableObject>();
+            AugmentableObjects = new Dictionary<int, AugmentableObject>();
+            AugmentableObjects.Add(0, new AugmentableObject("BIRD", 3f, 10f, new Vector3(1.0f, 1.5f, 0.2f)));
+            AugmentableObjects.Add(1, new AugmentableObject("AIRPLANE", 30.0f, 50.0f, new Vector3(1.0f, 1.2f, 0.2f)));
+            AugmentableObjects.Add(2, new AugmentableObject("BALLOON", 50.0f, 70.0f, new Vector3(1.0f, 1.0f, 2.5f)));
+            return AugmentableObjects;
+        }
+        #endregion
     }
 
     public enum TypeOfExecution
