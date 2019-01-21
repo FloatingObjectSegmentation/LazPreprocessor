@@ -20,7 +20,7 @@ namespace core
         */
 
         #region [config]
-        static double[] radius_values = { 1, 2, 3, 4, 5, 8 };
+        static double[] radius_values = { 3 };
         static string rbnn_exe_location = GConfig.TOOL_RBNN_PATH;
         #endregion
 
@@ -35,11 +35,6 @@ namespace core
 
         public CoreProcedure(string filepath) {
             this.filepath = filepath;
-        }
-
-        public void Start() {
-            Dmr2Pcd();
-            PreprocessLaz();
         }
 
         public void Dmr2Pcd() {
