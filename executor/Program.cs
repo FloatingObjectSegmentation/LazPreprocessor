@@ -11,11 +11,6 @@ namespace Executor
 
         static void Main(string[] args)
         {
-            /*
-            string path = @"C:\Users\km\Desktop\LIDAR_WORKSPACE\dmr\449_121";
-            CoreProcedure procedure = new CoreProcedure(path);
-            procedure.Dmr2Pcd();
-            */
             string[] filepaths = Directory.GetFiles(folder, "*.laz");
 
             foreach (string path in filepaths)

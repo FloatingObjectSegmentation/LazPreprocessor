@@ -31,9 +31,9 @@ namespace downloader
         private static List<List<int>> DesiredChunks;
         // paths
         private static readonly string ResourceDirectoryPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent?.FullName + "\\resources\\";
-        private static readonly string LidarFilesSavePath = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.LIDAR_SUBDIR);
+        private static readonly string LidarFilesSavePath = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.LIDAR_SUBDIR) + "\\";
 
-        private static readonly string DmrDirectoryPath = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.DMR_SUBDIR);
+        private static readonly string DmrDirectoryPath = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.DMR_SUBDIR) + "\\";
         #endregion
 
         #region [aux vars]

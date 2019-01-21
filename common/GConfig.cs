@@ -7,7 +7,7 @@ namespace common
     public static class GConfig
     {
         // workspace dirs
-        public const string WORKSPACE_DIR = @"C:\Users\km\Desktop\LIDAR_WORKSPACE";
+        public const string WORKSPACE_DIR = @"E:\workspaces\LIDAR_WORKSPACE";
         public const string LIDAR_SUBDIR = "lidar";
         public const string AUGMENTATION_SUBDIR = "augmentation";
         public const string DMR_SUBDIR = "dmr";
@@ -48,8 +48,9 @@ namespace common
         public static List<List<int>> CHUNK_VAL()
         {
             List<int> some = new List<int>(2);
-            some[0] = int.Parse(CHUNK.Split('_')[0]);
-            some[1] = int.Parse(CHUNK.Split('_')[1]);
+            string[] a = CHUNK.Split('_');
+            some.Add(int.Parse(a[0]));
+            some.Add(int.Parse(a[1]));
             List<List<int>> outer = new List<List<int>>();
             outer.Add(some);
             return outer;
