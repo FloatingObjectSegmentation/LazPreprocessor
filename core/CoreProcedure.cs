@@ -37,6 +37,11 @@ namespace core
             this.filepath = filepath;
         }
 
+        public void Start() {
+            Dmr2Pcd();
+            PreprocessLaz();
+        }
+
         public void Dmr2Pcd() {
             TransformTxtFileToPcdFile(filepath, ";");
         }

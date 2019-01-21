@@ -27,7 +27,6 @@ namespace downloader
 
         #region [config]
         // which ones to get
-        private static readonly int[] SlovenianMapBounds = { 449, 121, 449, 121 }; //minx,miny,maxx,maxy in thousand, manualy set based on ARSO website
         private static List<List<int>> DesiredChunks;
         // paths
         private static readonly string ResourceDirectoryPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent?.FullName + "\\resources\\";
@@ -44,8 +43,6 @@ namespace downloader
         private static int _addedBlocs;
         static string current = "";
         #endregion
-        
-
 
         public static void Main()
         {
@@ -97,8 +94,8 @@ namespace downloader
             DownloadLaz(lidarUrl);
             DownloadDmr(dmrUrl, x, y);
             SetParameters(lidarUrl);
-            RunLas2Las();
-            ReadWriteLaz();
+            Las12ToLas13();
+            EnrichLazWithRGBSAndNormals();
         }
         #endregion
 
@@ -189,7 +186,7 @@ namespace downloader
         }
 
         //reads LAZ, builds KD tree, reads LAZ again and sets color & normal and writes
-        private static void ReadWriteLaz()
+        private static void EnrichLazWithRGBSAndNormals()
         {
             var lazReader = new laszip_dll();
             var compressed = true;
@@ -277,7 +274,7 @@ namespace downloader
         }//end readwrite function
 
         //trasnform from LAS 1.2 to 1.3, save new file to folder
-        private static void RunLas2Las()
+        private static void Las12ToLas13()
         {
             Console.Write("[{0:hh:mm:ss}] Converting to LAS 1.3 ...", DateTime.Now);
             var start = new ProcessStartInfo

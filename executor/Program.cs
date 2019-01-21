@@ -16,7 +16,7 @@ namespace Executor
             foreach (string path in filepaths)
             {
                 CoreProcedure procedure = new CoreProcedure(path);
-                procedure.PreprocessLaz();
+                procedure.Start();
             }
         }
     }
