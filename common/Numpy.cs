@@ -1,12 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 
 namespace common
 {
     public static class Numpy
     {
+
+        public static Vector3 RandomVector() {
+            float x = (float) new Random().NextDouble();
+            float y = (float) new Random().NextDouble();
+            float z = (float) new Random().NextDouble();
+            return new Vector3(x, y, z);
+        }
+
         public static IEnumerable<double> Arange(double start, int count)
         {
             return Enumerable.Range((int)start, count).Select(v => (double)v);
