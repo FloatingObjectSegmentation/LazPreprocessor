@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace external_tools.underground_filter
+namespace external_tools.filters
 {
-    public class UndergroundFilter {
+    public class UndergroundFilter : Filter {
         public static List<int> Execute(List<AugmentableObjectSample> samples, string dmrfilepath) {
             string serialized = PointCloudiaFormatSerializer.PointBoundingBoxAndMaxDimFormat(samples);
             string tempfilepath = Path.Combine(GConfig.TOOL_UNDERGROUND_FILTER_PATH, "temp.txt");
@@ -40,9 +40,17 @@ namespace external_tools.underground_filter
                                                 Path.GetDirectoryName(samplesfilepath),
                                                 "underground" + Path.GetFileName(samplesfilepath));
 
-            List<int> lst = SpaceSeparatedFileParser.ParseInt(resultFileName);
-            File.Delete(resultFileName);
-            return lst;
+            try
+            {
+                List<int> lst = SpaceSeparatedFileParser.ParseInt(resultFileName);
+                return lst;
+            }
+            catch (Exception ex)
+            {
+                File.Delete(resultFileName);
+                throw ex;
+            }
+            
         }
     }
 }

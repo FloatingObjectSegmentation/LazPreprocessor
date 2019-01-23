@@ -8,10 +8,10 @@ using System.Text;
 using external_tools.common;
 using common.structs;
 
-namespace external_tools.overlap_filter
+namespace external_tools.filters
 {
 
-    public class OverlapFilter {
+    public class OverlapFilter : Filter {
         public static List<int> Execute(List<AugmentableObjectSample> samples)
         {
             string serialized = PointCloudiaFormatSerializer.PointBoundingBoxAndMaxDimFormat(samples);
@@ -44,9 +44,16 @@ namespace external_tools.overlap_filter
                                                 Path.GetDirectoryName(samplesfilepath),
                                                 resultfile_prefix + Path.GetFileName(samplesfilepath));
 
-            List<int> lst = SpaceSeparatedFileParser.ParseInt(resultFileName);
-            File.Delete(resultFileName);
-            return lst;
+            try
+            {
+                List<int> lst = SpaceSeparatedFileParser.ParseInt(resultFileName);
+                return lst;
+            }
+            catch (Exception ex)
+            {
+                File.Delete(resultFileName);
+                throw ex;
+            }
         }
     }
 }

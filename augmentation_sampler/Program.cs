@@ -8,8 +8,7 @@ using core;
 using common;
 using common.structs;
 using external_tools.rbnn;
-using external_tools.underground_filter;
-using external_tools.overlap_filter;
+using external_tools.filters;
 using external_tools.common;
 
 namespace augmentation_sampler
@@ -65,14 +64,14 @@ namespace augmentation_sampler
         {
             List<int> discardedIndices = OverlapFilter.Execute(samples);
             Console.WriteLine($"OverlapFilter: Discard {discardedIndices.Count} examples.");
-            DiscardFilteredExamples(discardedIndices);
+            samples = OverlapFilter.DiscardFilteredExamples(discardedIndices, samples);
         }
 
         private static void FilterUndergroundPoints()
         {
             List<int> discardedIndices = UndergroundFilter.Execute(samples, Path.Combine(DmrDirectory, DmrFileName));
             Console.WriteLine($"UndergroundFilter: Discard {discardedIndices.Count} examples.");
-            DiscardFilteredExamples(discardedIndices);
+            samples = UndergroundFilter.DiscardFilteredExamples(discardedIndices, samples);
         }
 
         private static void ComputeRbnnMinVals()
@@ -85,26 +84,6 @@ namespace augmentation_sampler
         {
             string serialized_samples = PointCloudiaFormatSerializer.AugmentableSampleResultFormat(samples, RbnnMinValsPerObject);
             File.WriteAllText(Path.Combine(SamplesFileDirectory, SamplesFileName), serialized_samples);
-        }
-        #endregion
-
-        #region [aux of aux]
-        private static void DiscardFilteredExamples(List<int> indicesOfDiscarded)
-        {
-            HashSet<int> setIndicesOfDiscarded = new HashSet<int>(indicesOfDiscarded);
-
-            // discard the overlapping examples
-            List<AugmentableObjectSample> filteredSamples = new List<AugmentableObjectSample>();
-
-            for (int i = 0; i < samples.Count; i++)
-            {
-                if (!setIndicesOfDiscarded.Contains(i))
-                {
-                    filteredSamples.Add(samples[i]);
-                }
-            }
-            samples.Clear();
-            samples = filteredSamples;
         }
         #endregion
     }
