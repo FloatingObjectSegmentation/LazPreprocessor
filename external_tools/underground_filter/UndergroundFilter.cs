@@ -12,7 +12,7 @@ namespace external_tools.underground_filter
     public class UndergroundFilter {
         public static List<int> Execute(List<AugmentableObjectSample> samples, string dmrfilepath) {
             string serialized = PointCloudiaFormatSerializer.PointBoundingBoxAndMaxDimFormat(samples);
-            string tempfilepath = Path.Combine(GConfig.TOOL_OVERLAP_COMPUTE_PATH, "temp.txt");
+            string tempfilepath = Path.Combine(GConfig.TOOL_UNDERGROUND_FILTER_PATH, "temp.txt");
             File.WriteAllText(tempfilepath, serialized);
             List<int> result = UndergroundFilterDriver.Execute(dmrfilepath, tempfilepath);
             File.Delete(tempfilepath);

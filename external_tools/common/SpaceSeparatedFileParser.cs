@@ -10,6 +10,8 @@ namespace external_tools.common
     {
         public static List<int> ParseInt(string filename) {
             string result = File.ReadAllText(filename);
+            if (result.Length == 0)
+                throw new Exception("FileParserError: The input file was empty!");
             List<int> list = new List<int>((result.Split(" ").Select((x) => int.Parse(x))));
             return list;
         }
