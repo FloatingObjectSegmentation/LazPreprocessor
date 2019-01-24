@@ -9,6 +9,15 @@ namespace common
     public static class Numpy
     {
 
+        public static float MaxDimension(Vector3 vec) {
+            return Math.Max(Math.Max(vec.X, vec.Y), vec.Z);
+        }
+
+        public static float MinDimension(Vector3 vec)
+        {
+            return Math.Min(Math.Min(vec.X, vec.Y), vec.Z);
+        }
+
         public static Vector3 RandomVector() {
             float x = (float) new Random().NextDouble();
             float y = (float) new Random().NextDouble();
