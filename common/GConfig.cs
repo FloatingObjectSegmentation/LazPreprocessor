@@ -15,6 +15,7 @@ namespace common
         public const string LIDAR_SUBDIR = "lidar";
         public const string AUGMENTATION_SUBDIR = "augmentation";
         public const string DMR_SUBDIR = "dmr";
+        public const string TESTS_SUBDIR = "tests";
         
         // tool paths
         public const string TOOL_RBNN_PATH = @"C:\Users\km\source\repos\LazPreprocessor\external_tools\resources";

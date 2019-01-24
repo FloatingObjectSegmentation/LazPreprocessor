@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "downloader", "downloader\do
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "external_tools", "external_tools\external_tools.csproj", "{36EBFEC5-2A6B-418D-9CD7-70D7941CEC38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UndergroundTest", "UndergroundTest\UndergroundTest.csproj", "{3805FF2C-3227-4074-8320-AAD72F9A5699}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "UndergroundTest\Tests.csproj", "{3805FF2C-3227-4074-8320-AAD72F9A5699}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

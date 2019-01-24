@@ -19,6 +19,9 @@ namespace external_tools.common
             string[] lines = augmentable_format_content.Split("\n");
             foreach (var line in lines)
             {
+                if (line.Length < 5)
+                    continue;
+
                 string[] parts = line.Split(" ");
 
                 int id = int.Parse(parts[0]);
