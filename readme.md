@@ -3,13 +3,24 @@ Usage:
 - Open in Visual Studio 2017
 - **$config = project common/GConfig.cs**
 
+### Define your workspace
+
+- Create a folder with 4 subfolders: lidar, dmr, tests and augmentation.
+- in $config, change the workspace dirs variables in region **[global]**
+- in $config, change the tool paths to point to your resources folder
+
 ### Download
 
 - In $config, under **[downloader]** section, set the execution type
-    - ```TypeOfExecution.Single``` means 
+    - They are self explanatory, define the elements you want processed bellow in the downloader section.
+- Rebuild project, set downloader as startup project and start the program.
+- **Result: las files and dmr files in /dmr, /lidar directories of your workspace**
 
+### Preprocess
 
-
+- In this phase, the results will be ready to:
+    - be viewed and labeled in PointCloudia
+    - create augmentables from them
 
 # OLD
 

@@ -16,11 +16,12 @@ namespace common
         public const string AUGMENTATION_SUBDIR = "augmentation";
         public const string DMR_SUBDIR = "dmr";
         public const string TESTS_SUBDIR = "tests";
-        
+
         // tool paths
-        public const string TOOL_RBNN_PATH = @"C:\Users\km\source\repos\LazPreprocessor\external_tools\resources";
-        public const string TOOL_OVERLAP_COMPUTE_PATH = @"C:\Users\km\source\repos\LazPreprocessor\external_tools\resources";
-        public const string TOOL_UNDERGROUND_FILTER_PATH = @"C:\Users\km\source\repos\LazPreprocessor\external_tools\resources";
+        public const string RESOURCES_FOLDER = @"C:\Users\km\Desktop\playground\LazPreprocessor\external_tools\resources";
+        public const string TOOL_RBNN_PATH = RESOURCES_FOLDER;
+        public const string TOOL_OVERLAP_COMPUTE_PATH = RESOURCES_FOLDER;
+        public const string TOOL_UNDERGROUND_FILTER_PATH = RESOURCES_FOLDER;
         #endregion
 
         #region [downloader]
