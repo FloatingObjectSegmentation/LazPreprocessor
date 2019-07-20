@@ -27,6 +27,11 @@ namespace external_tools.transforms
 
         public static string ExecXYZ(string filepath, string separator = " ") {
             string[] lines = File.ReadAllLines(filepath);
+
+            if (lines[0].Contains("# .PCD v.7 - Point Cloud Data file format")) {
+                return ""; // the file has already been processed
+            }
+
             for (int i = 0; i < lines.Length; i++) {
                 string[] parts = lines[i].Split(separator);
                 double x = double.Parse(parts[0]);
