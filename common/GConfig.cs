@@ -27,41 +27,40 @@ namespace common
         //// exec type
         public const TypeOfExecution TYPE_OF_EXEC = TypeOfExecution.Single;
 
-        // cherry picked
-        public static List<List<int>> CherryPicked()
+        // which chunks to get, (depending on execution type)
+        public static int[] Range2D_CHUNKS = { 449, 121, 449, 121 }; //minx,miny,maxx,maxy in thousand, manualy set based on ARSO website
+        public const string SINGLE_CHUNK = "449_121";
+        public static List<List<int>> CherryPicked_CHUNKS()
         {
             List<List<int>> CherryPicked = new List<List<int>>();
             CherryPicked.Add(new List<int> { 449, 121 });
             return CherryPicked;
         }
-
-        // range2D
-        public static int[] Range2D = { 449, 121, 449, 121 }; //minx,miny,maxx,maxy in thousand, manualy set based on ARSO website
+        
+        #region helper methods (DO NOT CONFIGURE)
         public static List<List<int>> GetRange2D()
         {
             List<List<int>> DesiredChunks = new List<List<int>>();
-            for (var x = GConfig.Range2D[0]; x <= GConfig.Range2D[2]; x++)
+            for (var x = GConfig.Range2D_CHUNKS[0]; x <= GConfig.Range2D_CHUNKS[2]; x++)
             {
-                for (var y = GConfig.Range2D[1]; y <= GConfig.Range2D[3]; y++)
+                for (var y = GConfig.Range2D_CHUNKS[1]; y <= GConfig.Range2D_CHUNKS[3]; y++)
                 {
                     DesiredChunks.Add(new List<int>() { x, y });
                 }
             }
             return DesiredChunks;
         }
-
-        // single chunk
-        public const string CHUNK = "449_121";
-        public static List<List<int>> CHUNK_VAL()
+        public static List<List<int>> SINGLE_CHUNK_VAL()
         {
             List<int> some = new List<int>(2);
-            string[] a = CHUNK.Split('_');
+            string[] a = SINGLE_CHUNK.Split('_');
             some.Add(int.Parse(a[0]));
             some.Add(int.Parse(a[1]));
             List<List<int>> outer = new List<List<int>>();
             outer.Add(some);
             return outer;
         }
+        #endregion
         #endregion
 
         #region [core]

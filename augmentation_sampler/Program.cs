@@ -19,11 +19,11 @@ namespace augmentation_sampler
         #region [config]
         // source lidar dataset
         static string TxtDatasetFileDirectory = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.LIDAR_SUBDIR);
-        static string TxtDatasetFileName = GConfig.CHUNK + ".txt";
+        static string TxtDatasetFileName = GConfig.SINGLE_CHUNK + ".txt";
 
         // source dataset DMR
         static string DmrDirectory = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.DMR_SUBDIR);
-        static string DmrFileName = GConfig.CHUNK;
+        static string DmrFileName = GConfig.SINGLE_CHUNK;
         
         // saving location of augmentables
         static string SamplesFileDirectory = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.AUGMENTATION_SUBDIR);
@@ -54,7 +54,7 @@ namespace augmentation_sampler
         {
             minBound = Tools.FindMinimumVector(Path.Combine(TxtDatasetFileDirectory, TxtDatasetFileName));
             maxBound = Tools.FindMaximumVector(Path.Combine(TxtDatasetFileDirectory, TxtDatasetFileName));
-            maxBound.Z += GConfig.candidateContextRadius;
+            maxBound.Z += GConfig.candidateContextRadius; 
             ObjectSampler samp = new ObjectSampler();
             samp.UnfilteredSampleObjects(GConfig.ObjectsToAdd, minBound, maxBound);
             samples = samp.samples;

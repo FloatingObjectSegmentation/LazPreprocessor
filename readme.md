@@ -1,3 +1,19 @@
+Usage:
+
+- Open in Visual Studio 2017
+- **$config = project common/GConfig.cs**
+
+### Download
+
+- In $config, under **[downloader]** section, set the execution type
+    - ```TypeOfExecution.Single``` means 
+
+
+
+
+# OLD
+
+
 # Laz Preprocessor
 
 Laz preprocessor is used to transform .laz files into other file forms and also extract additional
