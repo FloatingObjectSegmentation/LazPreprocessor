@@ -26,7 +26,7 @@ namespace common
 
         #region [downloader]
         //// exec type
-        public const TypeOfExecution TYPE_OF_EXEC = TypeOfExecution.Single;
+        public const TypeOfExecution TYPE_OF_EXEC = TypeOfExecution.CherryPick;
 
         // which chunks to get, (depending on execution type)
         public static int[] Range2D_CHUNKS = { 449, 121, 449, 121 }; //minx,miny,maxx,maxy in thousand, manualy set based on ARSO website
@@ -34,7 +34,15 @@ namespace common
         public static List<List<int>> CherryPicked_CHUNKS()
         {
             List<List<int>> CherryPicked = new List<List<int>>();
-            CherryPicked.Add(new List<int> { 449, 121 });
+            CherryPicked.Add(new List<int> { 464, 99 });
+            CherryPicked.Add(new List<int> { 463, 99 });
+            /*CherryPicked.Add(new List<int> { 464, 132 });
+            CherryPicked.Add(new List<int> { 509, 124 });
+            CherryPicked.Add(new List<int> { 521, 126 });
+            CherryPicked.Add(new List<int> { 401, 46 });
+            CherryPicked.Add(new List<int> { 413, 47 });
+            CherryPicked.Add(new List<int> { 414, 47 });
+            CherryPicked.Add(new List<int> { 410, 127 });*/
             return CherryPicked;
         }
         
@@ -74,7 +82,7 @@ namespace common
         #region [augmentation_sampler]
         public static float candidateContextRadius = 25.0f; // in meters
         public static int ObjectsToAdd = 500;
-        public static double[] AUGMENTATION_RBNN_R_SPAN = Numpy.LinSpace(2, 30, 25).ToArray();
+        public static double[] AUGMENTATION_RBNN_R_SPAN = Numpy.LinSpace(2, 30, 4).ToArray();
         public static string rbnn_augmentation_result_prefix = "rbnnaugresult";
         public static Dictionary<int, AugmentableObject> GetAugmentableObjectPallette()
         {

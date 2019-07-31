@@ -1,3 +1,6 @@
+README UPDATED ON COMMIT ()
+
+
 Usage:
 
 - Open in Visual Studio 2017
@@ -11,16 +14,44 @@ Usage:
 
 ### Download
 
+**Result: las files and dmr files in /dmr, /lidar directories of your workspace**
+
 - In $config, under **[downloader]** section, set the execution type
     - They are self explanatory, define the elements you want processed bellow in the downloader section.
 - Rebuild project, set downloader as startup project and start the program.
-- **Result: las files and dmr files in /dmr, /lidar directories of your workspace**
+
 
 ### Preprocess
 
-- In this phase, the results will be ready to:
-    - be viewed and labeled in PointCloudia
-    - create augmentables from them
+**Result: files able to be viewed/labeled in PointCloudia, create augmentables from. 4 files. saved in workspace/lidar/:**
+- .txt point cloud file
+- .txt class file (class labels for each point)
+- .txt intensity file (intensity labels for each point)
+- .pcd RBNN result file
+
+- In $config, set the **RBNN_R_VALUES** parameter to include all the RBNN values you want to obtain.
+- Set the **executor** project as startup project and run it.
+
+### Sampling of augmentables
+**Result: files filled with augmentables in workspace/augmentation**
+
+- In $config set the following:
+    - **candidateContextRadius** - a candidate has a context of some radius. This is important because it will determine the upper Z bound of sampling augmentables. (We don't want to sample 500 meters above the highest point of the terrain because the context will always be empty and the example, therefore, trivial)
+    - **ObjectsToAdd** - how many objects do you want to create
+    - **AUGMENTATION_RBNN_R_SPAN** - for determining the distance between the augmentable and the closest point in the dataset. Should be between a small **r** and the **candidateContextRadius**. The denser you make it, the more exact it will be, but the longer it will take to compute.
+    - **GetAugmentableObjectPalette()** - definitions for possible floating objects that will be randomly sampled. 
+
+- Set **augmentation_sampler** project as startup project and run the program.
+
+#### Augmentation file format
+
+for each augmentable:
+
+- [int id] [X,Y,Z vec float position] [X,Y,Z vec float scale] [string shape name] [X,Y,Z vec float airplane position] [float distance from transitive ground]\n
+
+## EXTRA
+
+Viewing data in PointCloudia
 
 # OLD
 

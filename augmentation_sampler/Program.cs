@@ -82,7 +82,15 @@ namespace augmentation_sampler
 
         private static void SaveResults()
         {
-            string serialized_samples = PointCloudiaFormatSerializer.AugmentableSampleResultFormat(samples, RbnnMinValsPerObject);
+
+            // remove 0 entries
+            List<Tuple<AugmentableObjectSample, double>> some = samples.Zip(RbnnMinValsPerObject, (x, y) =>
+            {
+                if (y != 0) return new Tuple<AugmentableObjectSample, double>(x, y); else return null;
+            }).Where(x => x != null).ToList();
+
+            // save to disk
+            string serialized_samples = PointCloudiaFormatSerializer.AugmentableSampleResultFormat(some.Select(x => x.Item1).ToList(), some.Select(x => x.Item2).ToList());
             File.WriteAllText(Path.Combine(SamplesFileDirectory, SamplesFileName), serialized_samples);
         }
         #endregion
