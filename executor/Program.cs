@@ -2,6 +2,8 @@
 using System.IO;
 using core;
 using common;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Executor
 {
@@ -15,16 +17,52 @@ namespace Executor
             string[] filepaths = Directory.GetFiles(lazfolder, "*.laz");
             string[] dmrpaths = Directory.GetFiles(dmrfolder);
 
+
+            List<Task> tasks = new List<Task>();
             foreach (string path in filepaths)
             {
-                CoreProcedure procedure = new CoreProcedure(path);
-                procedure.PreprocessLaz();
+                string current_path = path;
+                Task task = new Task(() =>
+                {
+                    CoreProcedure procedure = new CoreProcedure(current_path);
+                    procedure.PreprocessLaz();
+                });
+                tasks.Add(task);
             }
+            foreach (Task t in tasks)
+            {
+                t.Start();
+            }
+            foreach (Task t in tasks)
+            {
+                t.Wait();
+            }
+            foreach (Task t in tasks)
+            {
+                t.Dispose();
+            }
+
+
+            tasks = new List<Task>();
             foreach (string dmr in dmrpaths)
             {
-                CoreProcedure procedure = new CoreProcedure(dmr);
-                procedure.Dmr2Pcd();
+                string current_dmr = dmr;
+                Task task = new Task(() =>
+                {
+                    CoreProcedure procedure = new CoreProcedure(current_dmr);
+                    procedure.Dmr2Pcd();
+                });
+                tasks.Add(task);
             }
+            foreach (Task t in tasks)
+            {
+                t.Start();
+            }
+            foreach (Task t in tasks)
+            {
+                t.Wait();
+            }
+
         }
     }
 }

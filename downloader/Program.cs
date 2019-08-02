@@ -172,6 +172,7 @@ namespace downloader
             JsonDeserializer deserial = new JsonDeserializer();
 
             IRestResponse response = client.Execute(request);
+            Console.WriteLine(response.Content);
             var json = deserial.Deserialize<Dictionary<string, Dictionary<string, string>>>(response);
             if (json["d"]["Count"] == "0")
             {
@@ -189,7 +190,7 @@ namespace downloader
         {
             Uri uri = new Uri(lidarUrl);
             Console.Write("[{0:hh:mm:ss}] Downloading Laz from ARSO...", DateTime.Now);
-            WebClient client = new WebClient();
+            ExtendedWebClient client = new ExtendedWebClient(uri);
             client.DownloadFile(uri, LidarFilesSavePath + tempfile1name(chunk));
             Console.WriteLine("[DONE]");
         }

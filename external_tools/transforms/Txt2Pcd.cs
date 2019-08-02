@@ -26,7 +26,33 @@ namespace external_tools.transforms
                         "{1}" + "\n";
 
         public static string ExecXYZ(string filepath, string separator = " ") {
-            string[] lines = File.ReadAllLines(filepath);
+
+            StreamWriter output = new StreamWriter(filepath.Replace(".txt", ".pcd"));
+
+            using (var input = new StreamReader(filepath)) {
+                string input_line = "";
+                while ((input_line = input.ReadLine()) != null)
+                {
+                    if (input_line.Contains("# .PCD v.7 - Point Cloud Data file format"))
+                    {
+                        return "";
+                    }
+
+                    string[] parts = input_line.Split(separator);
+                    double x = double.Parse(parts[0]);
+                    double y = double.Parse(parts[1]);
+                    double z = double.Parse(parts[2]);
+
+                    input_line = string.Format("{0:F5} {1:F5} {2:F5}", x, y, z);
+                    output.WriteLine(input_line);
+
+                }
+                input.Close();
+            }
+            output.Close();
+            return filepath.Replace(".txt", ".pcd");
+
+                /*string[] lines = File.ReadAllLines(filepath);
 
             if (lines[0].Contains("# .PCD v.7 - Point Cloud Data file format")) {
                 return ""; // the file has already been processed
@@ -41,7 +67,7 @@ namespace external_tools.transforms
                 lines[i] = string.Format("{0:F5} {1:F5} {2:F5}", x,y,z);
             }
             File.WriteAllText(filepath.Replace(".txt", ".pcd"), string.Format(header, lines.Length, string.Join("\n", lines)));
-            return filepath.Replace(".txt", ".pcd");
+            return filepath.Replace(".txt", ".pcd");*/
         }
 
         #region [auxiliary]
