@@ -10,6 +10,7 @@ using common.structs;
 using external_tools.rbnn;
 using external_tools.filters;
 using external_tools.common;
+using System.Threading.Tasks;
 
 namespace augmentation_sampler
 {
@@ -18,39 +19,59 @@ namespace augmentation_sampler
 
         #region [config]
         // source lidar dataset
-        static string TxtDatasetFileDirectory = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.LIDAR_SUBDIR);
-        static string TxtDatasetFileName = GConfig.SINGLE_CHUNK + ".txt";
+        string TxtDatasetFileDirectory = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.LIDAR_SUBDIR);
+        string TxtDatasetFileName = GConfig.SINGLE_CHUNK + ".txt";
 
         // source dataset DMR
-        static string DmrDirectory = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.DMR_SUBDIR);
-        static string DmrFileName = GConfig.SINGLE_CHUNK;
+        string DmrDirectory = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.DMR_SUBDIR);
+        string DmrFileName = GConfig.SINGLE_CHUNK;
         
         // saving location of augmentables
-        static string SamplesFileDirectory = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.AUGMENTATION_SUBDIR);
-        static string SamplesFileName = "augmentation_result.txt";
+        string SamplesFileDirectory = Path.Combine(GConfig.WORKSPACE_DIR, GConfig.AUGMENTATION_SUBDIR);
+        string SamplesFileName = "augmentation_result.txt";
         #endregion
 
         #region [computed]
-        static Vector3 minBound;
-        static Vector3 maxBound;
-        static List<AugmentableObjectSample> samples = new List<AugmentableObjectSample>();
-        static List<double> RbnnMinValsPerObject;
+        Vector3 minBound;
+        Vector3 maxBound;
+        List<AugmentableObjectSample> samples = new List<AugmentableObjectSample>();
+        List<double> RbnnMinValsPerObject;
         #endregion
 
         static void Main(string[] args)
         {
-            Tools.Time(UnfilteredSampleObjects);
-            Tools.Time(FilterOverlappingObjects);
-            Tools.Time(FilterUndergroundPoints);
-            Tools.Time(ComputeRbnnMinVals);
-            Tools.Time(SaveResults);
+            List<List<int>> chunks = GConfig.GET_PICKED_CHUNKS();
+            List<Task> tasks = new List<Task>();
+            foreach (List<int> chunk in chunks) {
+                Program prg = new Program();
+                prg.TxtDatasetFileName = chunk[0] + "_" + chunk[1] + ".txt";
+                prg.DmrFileName = $"pcd{chunk[0]}_{chunk[1]}";
+                prg.SamplesFileName = $"{chunk[0]}_{chunk[1]}augmentation_result.txt";
+
+                Task t = new Task((exec_env) => {
+                    Program exec_env_prg = (Program)exec_env;
+                    Tools.Time(exec_env_prg.UnfilteredSampleObjects);
+                    Tools.Time(exec_env_prg.FilterOverlappingObjects);
+                    Tools.Time(exec_env_prg.FilterUndergroundPoints);
+                    Tools.Time(exec_env_prg.ComputeRbnnMinVals);
+                    Tools.Time(exec_env_prg.SaveResults);
+                }, prg);
+                tasks.Add(t);
+            }
+            foreach (Task t in tasks) {
+                t.Start();
+            }
+            foreach (Task t in tasks)
+            {
+                t.Wait();
+            }
 
             Console.WriteLine("Program finished. Press the ANY key to continue...");
             Console.ReadLine();
         }
 
         #region [aux]
-        private static void UnfilteredSampleObjects()
+        private void UnfilteredSampleObjects()
         {
             minBound = Tools.FindMinimumVector(Path.Combine(TxtDatasetFileDirectory, TxtDatasetFileName));
             maxBound = Tools.FindMaximumVector(Path.Combine(TxtDatasetFileDirectory, TxtDatasetFileName));
@@ -60,27 +81,27 @@ namespace augmentation_sampler
             samples = samp.samples;
         }
 
-        private static void FilterOverlappingObjects()
+        private void FilterOverlappingObjects()
         {
             List<int> discardedIndices = OverlapFilter.Execute(samples);
             Console.WriteLine($"OverlapFilter: Discard {discardedIndices.Count} examples.");
             samples = OverlapFilter.DiscardFilteredExamples(discardedIndices, samples);
         }
 
-        private static void FilterUndergroundPoints()
+        private void FilterUndergroundPoints()
         {
             List<int> discardedIndices = UndergroundFilter.Execute(samples, Path.Combine(DmrDirectory, DmrFileName));
             Console.WriteLine($"UndergroundFilter: Discard {discardedIndices.Count} examples.");
             samples = UndergroundFilter.DiscardFilteredExamples(discardedIndices, samples);
         }
 
-        private static void ComputeRbnnMinVals()
+        private void ComputeRbnnMinVals()
         {
             DFTFComputationProcedure proc = new DFTFComputationProcedure(samples, Path.Combine(TxtDatasetFileDirectory, TxtDatasetFileName));
             RbnnMinValsPerObject = proc.Execute();
         }
 
-        private static void SaveResults()
+        private void SaveResults()
         {
 
             // remove 0 entries

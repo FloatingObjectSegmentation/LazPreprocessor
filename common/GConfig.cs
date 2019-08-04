@@ -69,6 +69,19 @@ namespace common
             outer.Add(some);
             return outer;
         }
+
+        public static List<List<int>> GET_PICKED_CHUNKS() {
+            List<List<int>> result = new List<List<int>>();
+            if (TYPE_OF_EXEC == TypeOfExecution.Single)
+                return SINGLE_CHUNK_VAL();
+            else if (TYPE_OF_EXEC == TypeOfExecution.CherryPick)
+                return CherryPicked_CHUNKS();
+            else if (TYPE_OF_EXEC == TypeOfExecution.Range2D)
+                return GetRange2D();
+            else
+                throw new Exception("UNKNOWN TYPE OF EXECUTION");
+                
+        }
         #endregion
         #endregion
 
