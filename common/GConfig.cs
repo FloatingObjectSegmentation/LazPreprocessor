@@ -42,7 +42,7 @@ namespace common
             CherryPicked.Add(new List<int> { 401, 46 });
             CherryPicked.Add(new List<int> { 413, 47 });
             CherryPicked.Add(new List<int> { 414, 47 });
-            CherryPicked.Add(new List<int> { 410, 127 });
+            //CherryPicked.Add(new List<int> { 410, 127 });
             return CherryPicked;
         }
         
@@ -76,7 +76,7 @@ namespace common
         public static string class_filename_suffix = "class";
         public static string intensity_filename_suffix = "intensity";
         public static string rbnn_core_result_prefix = "rbnnresult";
-        public static double[] RBNN_R_VALUES = { 3 };
+        public static double[] RBNN_R_VALUES = { 3, 4, 5, 6, 7, 8 };
         #endregion
 
         #region [augmentation_sampler]

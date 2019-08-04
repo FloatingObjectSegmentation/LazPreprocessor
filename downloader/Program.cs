@@ -199,7 +199,7 @@ namespace downloader
         {
             Uri uri = new Uri(dmrUrl);
             Console.Write("[{0:hh:mm:ss}] Downloading DMR from ARSO...", DateTime.Now);
-            WebClient client = new WebClient();
+            ExtendedWebClient client = new ExtendedWebClient(uri);
             client.DownloadFile(uri, DmrDirectoryPath + x + "_" + y);
             Console.WriteLine("[DONE]");
         }

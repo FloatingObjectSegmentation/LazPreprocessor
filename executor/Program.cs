@@ -46,12 +46,13 @@ namespace Executor
             tasks = new List<Task>();
             foreach (string dmr in dmrpaths)
             {
+                if (dmr.Contains("pcd")) continue;
                 string current_dmr = dmr;
-                Task task = new Task(() =>
+                Task task = new Task((object dmr_state) =>
                 {
-                    CoreProcedure procedure = new CoreProcedure(current_dmr);
+                    CoreProcedure procedure = new CoreProcedure((string)dmr_state);
                     procedure.Dmr2Pcd();
-                });
+                }, current_dmr);
                 tasks.Add(task);
             }
             foreach (Task t in tasks)

@@ -51,7 +51,7 @@ namespace external_tools.rbnn
 
             pshcmd += string.Join(" ", radius_values);
             PowerShell.Execute(pshcmd,
-                               false,
+                               true,
                                Path.GetDirectoryName(filepath));
             return Path.Combine(Path.GetDirectoryName(filepath), resultfile_prefix) + Path.GetFileName(filepath);
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 using System.IO;
+using common;
 
 namespace external_tools.transforms
 {
@@ -22,12 +23,16 @@ namespace external_tools.transforms
                         "HEIGHT 1" + "\n" +
                         "VIEWPOINT 0 0 0 1 0 0 0" + "\n" +
                         "POINTS {0}" + "\n" +
-                        "DATA ascii" + "\n" +
-                        "{1}" + "\n";
+                        "DATA ascii" + "\n";
 
-        public static string ExecXYZ(string filepath, string separator = " ") {
+        public static string ExecXYZ(string filepath, string separator = " ", string pathaddition = "some") {
 
-            StreamWriter output = new StreamWriter(filepath.Replace(".txt", ".pcd"));
+            string filename = Filename.FromFullPath(filepath);
+            string filedir = Filename.FolderFromFullPath(filepath);
+            string new_name = Path.Combine(filedir, pathaddition + filename);
+
+            StreamWriter output = new StreamWriter(new_name.Replace(".txt", ".pcd"));
+            output.Write(string.Format(header, CountLines.CountLinesReader(new FileInfo(filepath))));
 
             using (var input = new StreamReader(filepath)) {
                 string input_line = "";
@@ -50,7 +55,7 @@ namespace external_tools.transforms
                 input.Close();
             }
             output.Close();
-            return filepath.Replace(".txt", ".pcd");
+            return new_name;
 
                 /*string[] lines = File.ReadAllLines(filepath);
 
