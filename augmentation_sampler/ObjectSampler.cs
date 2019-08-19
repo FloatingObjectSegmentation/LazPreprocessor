@@ -39,7 +39,7 @@ namespace augmentation_sampler
         private AugmentableObjectSample SampleObject()
         {
             // sample object type, size
-            int sample = new Random().Next(0, 3);
+            int sample = new Random().Next(0, AugmentableObjects.Count);
             AugmentableObject curr = AugmentableObjects[sample];
 
             float dimension = (float)((new Random().NextDouble()) * (curr.maxDimMeters - curr.minDimMeters) + curr.minDimMeters);

@@ -32,10 +32,10 @@ namespace external_tools.rbnn
         
         public static string ExecuteTxt(string filepath, string resultfile_prefix, double[] radius_values) {
             string newFileName = Txt2Pcd.ExecXYZ(filepath);
-            Execute(newFileName, resultfile_prefix, radius_values);
+            string result_file_name = Execute(newFileName, resultfile_prefix, radius_values);
             File.Delete(newFileName);
             
-            return Path.Combine(Path.GetDirectoryName(filepath), resultfile_prefix) + Path.GetFileName(filepath).Replace(".txt", ".pcd");
+            return result_file_name;
         }
 
         /// <summary>

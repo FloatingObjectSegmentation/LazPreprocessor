@@ -42,6 +42,8 @@ namespace augmentation_sampler
         {
             List<List<int>> chunks = GConfig.GET_PICKED_CHUNKS();
             List<Task> tasks = new List<Task>();
+
+            Console.WriteLine($"Processing {chunks.Count} chunks.");
             foreach (List<int> chunk in chunks) {
                 Program prg = new Program();
                 prg.TxtDatasetFileName = chunk[0] + "_" + chunk[1] + ".txt";

@@ -29,9 +29,9 @@ namespace external_tools.transforms
 
             string filename = Filename.FromFullPath(filepath);
             string filedir = Filename.FolderFromFullPath(filepath);
-            string new_name = Path.Combine(filedir, pathaddition + filename);
+            string new_name = Path.Combine(filedir, pathaddition + filename).Replace(".txt", ".pcd");
 
-            StreamWriter output = new StreamWriter(new_name.Replace(".txt", ".pcd"));
+            StreamWriter output = new StreamWriter(new_name);
             output.Write(string.Format(header, CountLines.CountLinesReader(new FileInfo(filepath))));
 
             using (var input = new StreamReader(filepath)) {

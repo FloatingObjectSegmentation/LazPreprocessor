@@ -26,11 +26,11 @@ namespace common
 
         #region [downloader]
         //// exec type
-        public const TypeOfExecution TYPE_OF_EXEC = TypeOfExecution.CherryPick;
+        public const TypeOfExecution TYPE_OF_EXEC = TypeOfExecution.Single;
 
         // which chunks to get, (depending on execution type)
         public static int[] Range2D_CHUNKS = { 449, 121, 449, 121 }; //minx,miny,maxx,maxy in thousand, manualy set based on ARSO website
-        public const string SINGLE_CHUNK = "449_121";
+        public const string SINGLE_CHUNK = "464_132";
         public static List<List<int>> CherryPicked_CHUNKS()
         {
             List<List<int>> CherryPicked = new List<List<int>>();
@@ -101,9 +101,10 @@ namespace common
         {
             Dictionary<int, AugmentableObject> AugmentableObjects = new Dictionary<int, AugmentableObject>();
             AugmentableObjects = new Dictionary<int, AugmentableObject>();
-            AugmentableObjects.Add(0, new AugmentableObject("BIRD", 3f, 10f, new Vector3(1.0f, 1.5f, 0.2f)));
-            AugmentableObjects.Add(1, new AugmentableObject("AIRPLANE", 30.0f, 50.0f, new Vector3(1.0f, 1.2f, 0.2f)));
-            AugmentableObjects.Add(2, new AugmentableObject("BALLOON", 50.0f, 70.0f, new Vector3(1.0f, 1.0f, 2.5f)));
+            AugmentableObjects.Add(0, new AugmentableObject("BIRD", 0.3f, 0.5f, new Vector3(1.0f, 1.5f, 0.2f)));
+            AugmentableObjects.Add(1, new AugmentableObject("AIRPLANE", 10.0f, 25.0f, new Vector3(1.0f, 1.2f, 0.25f)));
+            AugmentableObjects.Add(2, new AugmentableObject("BALLOON", 5.0f, 10.0f, new Vector3(1.0f, 1.0f, 1.5f)));
+            AugmentableObjects.Add(3, new AugmentableObject("DRONE", 0.5f, 1.5f, new Vector3(1.0f, 1.0f, 0.2f)));
             return AugmentableObjects;
         }
         #endregion
