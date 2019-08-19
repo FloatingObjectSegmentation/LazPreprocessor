@@ -19,6 +19,7 @@ using RestSharp.Serialization.Json;
 using Point = System.Windows.Point;
 using common;
 using System.Threading.Tasks;
+using System.Linq;
 //
 
 namespace downloader
@@ -88,43 +89,77 @@ namespace downloader
                 Console.WriteLine(Thread.CurrentThread.Name);
                 tasks.Add(task);
             }
-            foreach (Task t in tasks) {
-                t.Start();
+
+            // partition to batch size of 8 for 8 core processors.
+            List<List<Task>> batches = MyCollections.Partition<Task>(tasks.ToArray(), 8).ToList();
+
+            foreach (var batch in batches) {
+                Console.WriteLine("Batch start");
+                foreach (Task t in batch)
+                {
+                    t.Start();
+                }
+                foreach (Task t in batch)
+                {
+                    t.Wait();
+                }
             }
-            foreach (Task t in tasks) {
-                t.Wait();
-            }
+
+            
             Console.WriteLine("Task finished");
 
         }
 
         private void DownloadData(int x, int y)
         {
-            Start(x, y);
+            try
+            {
+                Start(x, y);
+                //Console.WriteLine("[{0:hh:mm:ss}] Number of blocs proccesed:  [todo]\n", DateTime.Now);
+            }
+            catch (Exception ex) {
+                Console.WriteLine(x + "_" + y + " could not be downloaded. " + ex.Message + ex.StackTrace);
+            }
+
+            try
+            {
+                DeleteTempFiles(x + "_" + y);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(x + "_" + y + " could not be downloaded. " + ex.Message + ex.StackTrace);
+            }
             
-            Console.WriteLine("[{0:hh:mm:ss}] Number of blocs proccesed:  [todo]\n", DateTime.Now);
-            DeleteTempFiles(x + "_" + y);
 
         }
 
         private void Start(int x, int y)
         {
+                current = x + "_" + y;
+                var lidarUrl = GetArsoUrl(x + "_" + y);
+                var dmrUrl = GetDmrUrl(x + "_" + y);
+                Console.WriteLine("[{0:hh:mm:ss}] Found URL: {1}", DateTime.Now, lidarUrl);
 
-            current = x + "_" + y;
-            var lidarUrl = GetArsoUrl(x + "_" + y);
-            var dmrUrl = GetDmrUrl(x + "_" + y);
-            Console.WriteLine("[{0:hh:mm:ss}] Found URL: {1}", DateTime.Now, lidarUrl);
-
-            DownloadLaz(lidarUrl, x + "_" + y);
-            DownloadDmr(dmrUrl, x, y);
-            SetParameters(lidarUrl);
-            Las12ToLas13(x + "_" + y);
-            EnrichLazWithRGBSAndNormals(x + "_" + y);
+                DownloadLaz(lidarUrl, x + "_" + y);
+                DownloadDmr(dmrUrl, x, y);
+                SetParameters(lidarUrl);
+                Las12ToLas13(x + "_" + y);
+                EnrichLazWithRGBSAndNormals(x + "_" + y);
+            
         }
 
         private void DeleteTempFiles(string chunk) {
-            File.Delete(Path.Combine(LidarFilesSavePath, tempfile1name(chunk)));
-            File.Delete(Path.Combine(LidarFilesSavePath, tempfile2name(chunk)));
+            try
+            {
+                File.Delete(Path.Combine(LidarFilesSavePath, tempfile1name(chunk)));
+            }
+            catch (Exception ex) { }
+            try
+            {
+                File.Delete(Path.Combine(LidarFilesSavePath, tempfile2name(chunk)));
+            }
+            catch (Exception ex) { }
+        
         }
         #endregion
 

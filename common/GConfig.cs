@@ -26,24 +26,28 @@ namespace common
 
         #region [downloader]
         //// exec type
-        public const TypeOfExecution TYPE_OF_EXEC = TypeOfExecution.Single;
+        public const TypeOfExecution TYPE_OF_EXEC = TypeOfExecution.CherryPick;
 
         // which chunks to get, (depending on execution type)
         public static int[] Range2D_CHUNKS = { 449, 121, 449, 121 }; //minx,miny,maxx,maxy in thousand, manualy set based on ARSO website
         public const string SINGLE_CHUNK = "464_132";
+        public const string CHERRY_PICKED_CHUNKS = "462_100, 464_99, 467_99, 469_101, 469_103, 452_113, 442_110, 436_111, 428_116, 424_112, 410_97, 406_97, 386_95, 386_99," + 
+                                                   "407_133, 405_132, 401_136, 453_141, 451_143, 472_134, 518_133, 601_158, 605_161, 613_156, 614_154, 549_156, 548_157," +
+                                                   "534_159, 530_155, 525_147, 524_148, 524_147, 525_145, 414_125, 413_127, 408_122, 394_105, 393_105, 394_102, 396_93, " +
+                                                   "401_46, 401_45, 400_45, 402_45, 395_44, 391_43, 388_43, 391_38, 390_40, 491_57";
         public static List<List<int>> CherryPicked_CHUNKS()
         {
-            List<List<int>> CherryPicked = new List<List<int>>();
-            CherryPicked.Add(new List<int> { 464, 99 });
-            CherryPicked.Add(new List<int> { 463, 99 });
-            CherryPicked.Add(new List<int> { 464, 132 });
-            CherryPicked.Add(new List<int> { 509, 124 });
-            CherryPicked.Add(new List<int> { 521, 126 });
-            CherryPicked.Add(new List<int> { 401, 46 });
-            CherryPicked.Add(new List<int> { 413, 47 });
-            CherryPicked.Add(new List<int> { 414, 47 });
-            //CherryPicked.Add(new List<int> { 410, 127 });
-            return CherryPicked;
+            string[] chunks = CHERRY_PICKED_CHUNKS.Replace(" ", "").Split(new char[] { ',' });
+            var parsed = chunks.Select(x =>
+            {
+                List<int> lst = new List<int>();
+                string[] parts = x.Split(new char[] { '_' });
+                lst.Add(int.Parse(parts[0]));
+                lst.Add(int.Parse(parts[1]));
+                return lst;
+            }).ToList();
+            Console.WriteLine($"Cherry picked {parsed.Count} chunks");
+            return parsed;
         }
         
         #region helper methods (DO NOT CONFIGURE)
