@@ -4,6 +4,7 @@ using core;
 using common;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Executor
 {
@@ -29,18 +30,26 @@ namespace Executor
                 });
                 tasks.Add(task);
             }
-            foreach (Task t in tasks)
-            {
-                t.Start();
+
+            // partition to batch size of 8 for 8 core processors.
+            List<List<Task>> batches = MyCollections.Partition<Task>(tasks.ToArray(), 8).ToList();
+            foreach (var batch in batches) {
+                foreach (Task t in batch)
+                {
+                    t.Start();
+                }
+                foreach (Task t in batch)
+                {
+                    t.Wait();
+                }
+                foreach (Task t in batch)
+                {
+                    t.Dispose();
+                }
             }
-            foreach (Task t in tasks)
-            {
-                t.Wait();
-            }
-            foreach (Task t in tasks)
-            {
-                t.Dispose();
-            }
+
+
+            
 
 
             tasks = new List<Task>();
@@ -55,13 +64,18 @@ namespace Executor
                 }, current_dmr);
                 tasks.Add(task);
             }
-            foreach (Task t in tasks)
+
+            batches = MyCollections.Partition<Task>(tasks.ToArray(), 8).ToList();
+            foreach (var batch in batches)
             {
-                t.Start();
-            }
-            foreach (Task t in tasks)
-            {
-                t.Wait();
+                foreach (Task t in batch)
+                {
+                    t.Start();
+                }
+                foreach (Task t in batch)
+                {
+                    t.Wait();
+                }
             }
 
         }
