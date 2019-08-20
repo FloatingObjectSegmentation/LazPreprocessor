@@ -98,7 +98,7 @@ namespace common
 
         #region [augmentation_sampler]
         public static float candidateContextRadius = 25.0f; // in meters
-        public static int ObjectsToAdd = 500;
+        public static int ObjectsToAdd = 20;
         public static double[] AUGMENTATION_RBNN_R_SPAN = Numpy.LinSpace(2, 30, 4).ToArray();
         public static string rbnn_augmentation_result_prefix = "rbnnaugresult";
         public static Dictionary<int, AugmentableObject> GetAugmentableObjectPallette()

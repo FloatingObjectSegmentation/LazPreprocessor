@@ -55,17 +55,26 @@ namespace augmentation_sampler
                     Tools.Time(exec_env_prg.UnfilteredSampleObjects);
                     Tools.Time(exec_env_prg.FilterOverlappingObjects);
                     Tools.Time(exec_env_prg.FilterUndergroundPoints);
+
+                    exec_env_prg.samples = exec_env_prg.samples.Take(GConfig.ObjectsToAdd).ToList();
+
                     Tools.Time(exec_env_prg.ComputeRbnnMinVals);
                     Tools.Time(exec_env_prg.SaveResults);
                 }, prg);
                 tasks.Add(t);
             }
-            foreach (Task t in tasks) {
-                t.Start();
-            }
-            foreach (Task t in tasks)
+
+            List<List<Task>> batches = MyCollections.Partition<Task>(tasks.ToArray(), 8).ToList();
+            foreach (var batch in batches)
             {
-                t.Wait();
+                foreach (Task t in batch)
+                {
+                    t.Start();
+                }
+                foreach (Task t in batch)
+                {
+                    t.Wait();
+                }
             }
 
             Console.WriteLine("Program finished. Press the ANY key to continue...");
