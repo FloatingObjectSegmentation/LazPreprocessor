@@ -34,7 +34,6 @@ namespace external_tools.rbnn
             string newFileName = Txt2Pcd.ExecXYZ(filepath);
             string result_file_name = Execute(newFileName, resultfile_prefix, radius_values);
             File.Delete(newFileName);
-            
             return result_file_name;
         }
 

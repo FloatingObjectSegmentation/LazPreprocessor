@@ -64,7 +64,7 @@ namespace augmentation_sampler
                 tasks.Add(t);
             }
 
-            List<List<Task>> batches = MyCollections.Partition<Task>(tasks.ToArray(), 8).ToList();
+            List<List<Task>> batches = MyCollections.Partition<Task>(tasks.ToArray(), 5).ToList();
             foreach (var batch in batches)
             {
                 foreach (Task t in batch)
@@ -94,14 +94,14 @@ namespace augmentation_sampler
 
         private void FilterOverlappingObjects()
         {
-            List<int> discardedIndices = OverlapFilter.Execute(samples);
+            List<int> discardedIndices = new OverlapFilter().Execute(samples);
             Console.WriteLine($"OverlapFilter: Discard {discardedIndices.Count} examples.");
             samples = OverlapFilter.DiscardFilteredExamples(discardedIndices, samples);
         }
 
         private void FilterUndergroundPoints()
         {
-            List<int> discardedIndices = UndergroundFilter.Execute(samples, Path.Combine(DmrDirectory, DmrFileName));
+            List<int> discardedIndices = new UndergroundFilter().Execute(samples, Path.Combine(DmrDirectory, DmrFileName));
             Console.WriteLine($"UndergroundFilter: Discard {discardedIndices.Count} examples.");
             samples = UndergroundFilter.DiscardFilteredExamples(discardedIndices, samples);
         }

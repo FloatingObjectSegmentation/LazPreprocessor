@@ -27,7 +27,7 @@ namespace augmentation_sampler
             this.minWorldBound = minWorldBound;
             this.maxWorldBound = maxWorldBound;
 
-            for (int i = 0; i < 10 * ObjectsToAdd; i++)
+            for (int i = 0; i < 20 * ObjectsToAdd; i++)
             {
                 AugmentableObjectSample curr = SampleObject();
                 samples.Add(curr);
