@@ -12,12 +12,12 @@ namespace external_tools.filters
 {
 
     public class OverlapFilter : Filter {
-        public static List<int> Execute(List<AugmentableObjectSample> samples)
+        public List<int> Execute(List<AugmentableObjectSample> samples)
         {
             string serialized = PointCloudiaFormatSerializer.PointBoundingBoxAndMaxDimFormat(samples);
-            string tempfilepath = Path.Combine(GConfig.TOOL_OVERLAP_COMPUTE_PATH, "temp.txt");
+            string tempfilepath = Path.Combine(GConfig.TOOL_OVERLAP_COMPUTE_PATH, "temp.txt" + Guid.NewGuid().ToString());
             File.WriteAllText(tempfilepath, serialized);
-            List<int> result = OverlapFilterDriver.Execute(tempfilepath);
+            List<int> result = new OverlapFilterDriver().Execute(tempfilepath);
             File.Delete(tempfilepath);
             return result;
         }
@@ -28,7 +28,7 @@ namespace external_tools.filters
 
         const string resultfile_prefix = "result";
 
-        public static List<int> Execute(string samplesfilepath)
+        public List<int> Execute(string samplesfilepath)
         {
 
             string pshcmd = String.Format("{0}\\overlap_compute.exe {1} {2}",

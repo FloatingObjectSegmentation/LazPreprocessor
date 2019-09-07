@@ -10,11 +10,11 @@ using System.Text;
 namespace external_tools.filters
 {
     public class UndergroundFilter : Filter {
-        public static List<int> Execute(List<AugmentableObjectSample> samples, string dmrfilepath) {
+        public List<int> Execute(List<AugmentableObjectSample> samples, string dmrfilepath) {
             string serialized = PointCloudiaFormatSerializer.PointBoundingBoxAndMaxDimFormat(samples);
-            string tempfilepath = Path.Combine(GConfig.TOOL_UNDERGROUND_FILTER_PATH, "temp.txt");
+            string tempfilepath = Path.Combine(GConfig.TOOL_UNDERGROUND_FILTER_PATH, "temp.txt" + Guid.NewGuid().ToString());
             File.WriteAllText(tempfilepath, serialized);
-            List<int> result = UndergroundFilterDriver.Execute(dmrfilepath, tempfilepath);
+            List<int> result = new UndergroundFilterDriver().Execute(dmrfilepath, tempfilepath);
             File.Delete(tempfilepath);
             return result;
         }
@@ -22,7 +22,7 @@ namespace external_tools.filters
 
     class UndergroundFilterDriver
     {
-        public static List<int> Execute(string dmrfilepath, string samplesfilepath)
+        public List<int> Execute(string dmrfilepath, string samplesfilepath)
         {
 
             string pshcmd = String.Format("{0}\\underground_filter.exe {1} {2} {3} {4}",

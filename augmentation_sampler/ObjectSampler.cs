@@ -27,7 +27,7 @@ namespace augmentation_sampler
             this.minWorldBound = minWorldBound;
             this.maxWorldBound = maxWorldBound;
 
-            for (int i = 0; i < 10 * ObjectsToAdd; i++)
+            for (int i = 0; i < 20 * ObjectsToAdd; i++)
             {
                 AugmentableObjectSample curr = SampleObject();
                 samples.Add(curr);
@@ -39,7 +39,7 @@ namespace augmentation_sampler
         private AugmentableObjectSample SampleObject()
         {
             // sample object type, size
-            int sample = new Random().Next(0, 3);
+            int sample = new Random().Next(0, AugmentableObjects.Count);
             AugmentableObject curr = AugmentableObjects[sample];
 
             float dimension = (float)((new Random().NextDouble()) * (curr.maxDimMeters - curr.minDimMeters) + curr.minDimMeters);

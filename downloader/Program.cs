@@ -18,6 +18,8 @@ using RestSharp.Deserializers;
 using RestSharp.Serialization.Json;
 using Point = System.Windows.Point;
 using common;
+using System.Threading.Tasks;
+using System.Linq;
 //
 
 namespace downloader
@@ -37,13 +39,14 @@ namespace downloader
 
         #region [aux vars]
         private const int OrtoPhotoImgSize = 2000;
-        private static bool IncludeNormals = false;
-        private static int _bottomLeftX;
-        private static int _bottomLeftY;
-        private static int _addedBlocs;
-        static string current = "";
-        private const string tempfile1name = "laz12.laz";
-        private const string tempfile2name = "laz13.laz";
+        private bool IncludeNormals = false;
+        private int _bottomLeftX;
+        private int _bottomLeftY;
+        
+        string current = "";
+        private static Func<string,string> tempfile1name = (x) => x + "laz12.laz";
+        private static Func<string,string> tempfile2name = (x) => x + "laz13.laz";
+
         #endregion
 
         public static void Main()
@@ -54,17 +57,16 @@ namespace downloader
             switch (GConfig.TYPE_OF_EXEC)
             {
                 case TypeOfExecution.Range2D:
-                    //DesiredChunks = GConfig.GetRange2D();
+                    DesiredChunks = GConfig.GetRange2D();
                     break;
                 case TypeOfExecution.CherryPick:
-                    //DesiredChunks = GConfig.CherryPicked();
+                    DesiredChunks = GConfig.CherryPicked_CHUNKS();
                     break;
                 case TypeOfExecution.Single:
-                    DesiredChunks = GConfig.CHUNK_VAL();
+                    DesiredChunks = GConfig.SINGLE_CHUNK_VAL();
                     break;
             }
             Execute();
-            DeleteTempFiles();
             Console.WriteLine("[{0:hh:mm:ss}] End program.", DateTime.Now);
         }
 
@@ -72,47 +74,99 @@ namespace downloader
         #region [aux]
         private static void Execute()
         {
-            _addedBlocs = 0;
-            for (int i = 0; i < DesiredChunks.Count; i++)
+            
+            Thread.CurrentThread.Name = "Main";
+
+            int loopend = DesiredChunks.Count;
+            List<Task> tasks = new List<Task>();
+            for (int i = 0; i < loopend; i++)
             {
-                DownloadData(DesiredChunks[i][0], DesiredChunks[i][1]);
+                int a = DesiredChunks[i][0];
+                int b = DesiredChunks[i][1];
+                Task task = new Task(() => {
+                    new SlemenikDownloader().DownloadData(a, b);
+                });
+                Console.WriteLine(Thread.CurrentThread.Name);
+                tasks.Add(task);
             }
 
+            // partition to batch size of 8 for 8 core processors.
+            List<List<Task>> batches = MyCollections.Partition<Task>(tasks.ToArray(), 8).ToList();
+
+            foreach (var batch in batches) {
+                Console.WriteLine("Batch start");
+                foreach (Task t in batch)
+                {
+                    t.Start();
+                }
+                foreach (Task t in batch)
+                {
+                    t.Wait();
+                }
+            }
+
+            
+            Console.WriteLine("Task finished");
+
         }
 
-        private static void DownloadData(int x, int y)
+        private void DownloadData(int x, int y)
         {
-            Start(x, y);
-            _addedBlocs++;
-            Console.WriteLine("[{0:hh:mm:ss}] Number of blocs proccesed:  {1}\n", DateTime.Now, _addedBlocs);
+            try
+            {
+                Start(x, y);
+                //Console.WriteLine("[{0:hh:mm:ss}] Number of blocs proccesed:  [todo]\n", DateTime.Now);
+            }
+            catch (Exception ex) {
+                Console.WriteLine(x + "_" + y + " could not be downloaded. " + ex.Message + ex.StackTrace);
+            }
+
+            try
+            {
+                DeleteTempFiles(x + "_" + y);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(x + "_" + y + " could not be downloaded. " + ex.Message + ex.StackTrace);
+            }
+            
 
         }
 
-        private static void Start(int x, int y)
+        private void Start(int x, int y)
         {
+                current = x + "_" + y;
+                var lidarUrl = GetArsoUrl(x + "_" + y);
+                var dmrUrl = GetDmrUrl(x + "_" + y);
+                Console.WriteLine("[{0:hh:mm:ss}] Found URL: {1}", DateTime.Now, lidarUrl);
 
-            current = x + "_" + y;
-            var lidarUrl = GetArsoUrl(x + "_" + y);
-            var dmrUrl = GetDmrUrl(x + "_" + y);
-            Console.WriteLine("[{0:hh:mm:ss}] Found URL: {1}", DateTime.Now, lidarUrl);
-
-            DownloadLaz(lidarUrl);
-            DownloadDmr(dmrUrl, x, y);
-            SetParameters(lidarUrl);
-            Las12ToLas13();
-            EnrichLazWithRGBSAndNormals();
+                DownloadLaz(lidarUrl, x + "_" + y);
+                DownloadDmr(dmrUrl, x, y);
+                SetParameters(lidarUrl);
+                Las12ToLas13(x + "_" + y);
+                EnrichLazWithRGBSAndNormals(x + "_" + y);
+            
         }
 
-        private static void DeleteTempFiles() {
-            File.Delete(Path.Combine(LidarFilesSavePath, tempfile1name));
-            File.Delete(Path.Combine(LidarFilesSavePath, tempfile2name));
+        private void DeleteTempFiles(string chunk) {
+            try
+            {
+                File.Delete(Path.Combine(LidarFilesSavePath, tempfile1name(chunk)));
+            }
+            catch (Exception ex) { }
+            try
+            {
+                File.Delete(Path.Combine(LidarFilesSavePath, tempfile2name(chunk)));
+            }
+            catch (Exception ex) { }
+        
         }
         #endregion
 
         #region [aux of aux]
 
         #region [get urls]
-        private static string GetArsoUrl(string searchTerm)
+        private string GetArsoUrl(string searchTerm)
         {
             //we use ARSO search bar functionality to find valid URLs, based on brute-forced search terms 
             // param: example: "470_12"
@@ -127,7 +181,7 @@ namespace downloader
             }
         }
 
-        private static string GetDmrUrl(string searchTerm)
+        private string GetDmrUrl(string searchTerm)
         {
             try
             {
@@ -140,7 +194,7 @@ namespace downloader
             }
         }
 
-        private static string GetBlok(string search_term)
+        private string GetBlok(string search_term)
         {
             var client = new RestClient("http://gis.arso.gov.si");
             var request = new RestRequest("evode/WebServices/NSearchWebService.asmx/GetFilterListItems", Method.POST);
@@ -153,6 +207,7 @@ namespace downloader
             JsonDeserializer deserial = new JsonDeserializer();
 
             IRestResponse response = client.Execute(request);
+            Console.WriteLine(response.Content);
             var json = deserial.Deserialize<Dictionary<string, Dictionary<string, string>>>(response);
             if (json["d"]["Count"] == "0")
             {
@@ -166,20 +221,20 @@ namespace downloader
         #region [start]
         //download LAZ file, based on valid URL
         //param example: "gis.arso.gov.si/lidar/gkot/laz/b_35/D48GK/GK_462_104.laz"
-        private static void DownloadLaz(string lidarUrl)
+        private void DownloadLaz(string lidarUrl, string chunk)
         {
             Uri uri = new Uri(lidarUrl);
             Console.Write("[{0:hh:mm:ss}] Downloading Laz from ARSO...", DateTime.Now);
-            WebClient client = new WebClient();
-            client.DownloadFile(uri, LidarFilesSavePath + tempfile1name);
+            ExtendedWebClient client = new ExtendedWebClient(uri);
+            client.DownloadFile(uri, LidarFilesSavePath + tempfile1name(chunk));
             Console.WriteLine("[DONE]");
         }
 
-        private static void DownloadDmr(string dmrUrl, int x, int y)
+        private void DownloadDmr(string dmrUrl, int x, int y)
         {
             Uri uri = new Uri(dmrUrl);
             Console.Write("[{0:hh:mm:ss}] Downloading DMR from ARSO...", DateTime.Now);
-            WebClient client = new WebClient();
+            ExtendedWebClient client = new ExtendedWebClient(uri);
             client.DownloadFile(uri, DmrDirectoryPath + x + "_" + y);
             Console.WriteLine("[DONE]");
         }
@@ -187,7 +242,7 @@ namespace downloader
 
         //sets global parameters
         //param example: "gis.arso.gov.si/lidar/gkot/laz/b_35/D48GK/GK_462_104.laz"
-        private static void SetParameters(string url)
+        private void SetParameters(string url)
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
             var fileName = Path.GetFileNameWithoutExtension(url);
@@ -196,11 +251,11 @@ namespace downloader
         }
 
         //reads LAZ, builds KD tree, reads LAZ again and sets color & normal and writes
-        private static void EnrichLazWithRGBSAndNormals()
+        private void EnrichLazWithRGBSAndNormals(string chunk)
         {
             var lazReader = new laszip_dll();
             var compressed = true;
-            var filePath = LidarFilesSavePath + tempfile2name;
+            var filePath = LidarFilesSavePath + tempfile2name(chunk);
 
             lazReader.laszip_open_reader(filePath, ref compressed);
             var numberOfPoints = lazReader.header.number_of_point_records;
@@ -284,13 +339,13 @@ namespace downloader
         }//end readwrite function
 
         //trasnform from LAS 1.2 to 1.3, save new file to folder
-        private static void Las12ToLas13()
+        private void Las12ToLas13(string chunk)
         {
             Console.Write("[{0:hh:mm:ss}] Converting to LAS 1.3 ...", DateTime.Now);
             var start = new ProcessStartInfo
             {
                 Arguments = "-i \"" + LidarFilesSavePath +
-                          $"{tempfile1name}\" -set_point_type 5 -set_version 1.3 -o \"" + LidarFilesSavePath + $"{tempfile2name}\"",
+                          $"{tempfile1name(chunk)}\" -set_point_type 5 -set_version 1.3 -o \"" + LidarFilesSavePath + $"{tempfile2name(chunk)}\"",
                 FileName = ResourceDirectoryPath + "las2las",
                 WindowStyle = ProcessWindowStyle.Hidden,
                 CreateNoWindow = false
@@ -307,7 +362,7 @@ namespace downloader
 
         #region [aux of aux of aux]
         //nearest neighbour interpolation
-        private static int[] FindClosestPxCoordinates(double x, double y)
+        private int[] FindClosestPxCoordinates(double x, double y)
         {
 
             var decimalPartX = x - Math.Floor(x);
@@ -341,7 +396,7 @@ namespace downloader
         }
 
         //p is out of bounds if x or y coordinate is bigger than width of length of image 
-        private static bool IsPointOutOfBounds(Point p)
+        private bool IsPointOutOfBounds(Point p)
         {
             double maxX = _bottomLeftX + (OrtoPhotoImgSize - 1);
             double maxY = _bottomLeftY + (OrtoPhotoImgSize - 1);
@@ -350,7 +405,7 @@ namespace downloader
         }
 
         //download and return Image created based on bounds -> _bottomLeftX, _bottomLeftY
-        private static Bitmap GetOrthophotoImg()
+        private Bitmap GetOrthophotoImg()
         {
             double minX = _bottomLeftX;
             double minY = _bottomLeftY;

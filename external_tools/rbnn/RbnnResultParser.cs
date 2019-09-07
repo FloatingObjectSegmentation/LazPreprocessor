@@ -10,7 +10,9 @@ namespace external_tools.rbnn
         public Dictionary<string, RbnnResult> ParseResults(string result_file_path) {
             Dictionary<string, RbnnResult> result = new Dictionary<string, RbnnResult>();
             string[] lines = File.ReadAllLines(result_file_path);
-            foreach (string line in lines) {
+            for (int i = 0; i < lines.Length; i++) {
+                if (i == 0) continue;
+                string line = lines[i];
                 KeyValuePair<string, RbnnResult> res = ParseResult(line);
                 result.Add(res.Key, res.Value);
             }

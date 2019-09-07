@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "external_tools", "external_
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "UndergroundTest\Tests.csproj", "{3805FF2C-3227-4074-8320-AAD72F9A5699}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bitmap", "bitmap\bitmap.csproj", "{80065E93-0CF8-4A88-BA7C-4AD4255DA81D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{3805FF2C-3227-4074-8320-AAD72F9A5699}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3805FF2C-3227-4074-8320-AAD72F9A5699}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3805FF2C-3227-4074-8320-AAD72F9A5699}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80065E93-0CF8-4A88-BA7C-4AD4255DA81D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80065E93-0CF8-4A88-BA7C-4AD4255DA81D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80065E93-0CF8-4A88-BA7C-4AD4255DA81D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80065E93-0CF8-4A88-BA7C-4AD4255DA81D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

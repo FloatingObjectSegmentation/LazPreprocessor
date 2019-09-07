@@ -40,7 +40,7 @@ namespace core
         }
 
         public void Dmr2Pcd() {
-            TransformTxtFileToPcdFile(filepath, ";");
+            TransformTxtFileToPcdFile(filepath, ";", "pcd");
         }
         
         public void PreprocessLaz()
@@ -63,14 +63,14 @@ namespace core
 
         }
 
-        void TransformTxtFileToPcdFile(string txt_path, string separator = " ")
+        void TransformTxtFileToPcdFile(string txt_path, string separator = " ", string pathappend = "")
         {
-            Txt2Pcd.ExecXYZ(txt_path, separator);
+            Txt2Pcd.ExecXYZ(txt_path, separator, pathappend);
         }
 
         private void ExecuteRbnnFromPcdFile()
         {
-            string rbnn_result_filepath = RbnnDriver.Execute(pcd_path, GConfig.rbnn_core_result_prefix, radius_values);
+            string rbnn_result_filepath = new RbnnDriver().Execute(pcd_path, GConfig.rbnn_core_result_prefix, radius_values);
         }
         #endregion
     }
