@@ -11,6 +11,7 @@ using external_tools.rbnn;
 using external_tools.filters;
 using external_tools.common;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace augmentation_sampler
 {
@@ -41,6 +42,43 @@ namespace augmentation_sampler
         static void Main(string[] args)
         {
             List<List<int>> chunks = GConfig.GET_PICKED_CHUNKS();
+
+            List<List<int>> list = new List<List<int>>();
+            string[] augs = Directory.GetFiles(Path.Combine(GConfig.WORKSPACE_DIR, GConfig.AUGMENTATION_SUBDIR));
+            foreach (string s in augs) {
+                if (File.Exists(s)) {
+
+                    Regex rx = new Regex(@"[0-9]{3}[_]{1}[0-9]{2,3}",
+                    RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                    Match matches = rx.Match(s);
+                    string chunk = matches.Value;
+                    
+                    string[] parts = chunk.Split("_");
+                    List<int> element = new List<int>();
+                    element.Add(int.Parse(parts[0]));
+                    element.Add(int.Parse(parts[1]));
+                    list.Add(element);
+                }
+            }
+
+            List<List<int>> filteredChunks = new List<List<int>>();
+            foreach (List<int> chunk in chunks) {
+
+                bool kurac = true;
+                for (int i = 0; i < list.Count; i++) {
+                    if (list[i][0] == chunk[0] && list[i][1] == chunk[1]) {
+                        kurac = false;
+                        break;
+                    }
+                }
+                if (!kurac) continue;
+
+                filteredChunks.Add(chunk);
+            }
+            chunks = filteredChunks;
+            
+
+
             List<Task> tasks = new List<Task>();
 
             Console.WriteLine($"Processing {chunks.Count} chunks.");
@@ -51,15 +89,21 @@ namespace augmentation_sampler
                 prg.SamplesFileName = $"{chunk[0]}_{chunk[1]}augmentation_result.txt";
 
                 Task t = new Task((exec_env) => {
-                    Program exec_env_prg = (Program)exec_env;
-                    Tools.Time(exec_env_prg.UnfilteredSampleObjects);
-                    Tools.Time(exec_env_prg.FilterOverlappingObjects);
-                    Tools.Time(exec_env_prg.FilterUndergroundPoints);
+                    try
+                    {
+                        Program exec_env_prg = (Program)exec_env;
+                        Tools.Time(exec_env_prg.UnfilteredSampleObjects);
+                        Tools.Time(exec_env_prg.FilterOverlappingObjects);
+                        Tools.Time(exec_env_prg.FilterUndergroundPoints);
 
-                    exec_env_prg.samples = exec_env_prg.samples.Take(GConfig.ObjectsToAdd).ToList();
+                        exec_env_prg.samples = exec_env_prg.samples.Take(GConfig.ObjectsToAdd).ToList();
 
-                    Tools.Time(exec_env_prg.ComputeRbnnMinVals);
-                    Tools.Time(exec_env_prg.SaveResults);
+                        Tools.Time(exec_env_prg.ComputeRbnnMinVals);
+                        Tools.Time(exec_env_prg.SaveResults);
+                    }
+                    catch (Exception ex) {
+                        Console.WriteLine("Failed executing " + ((Program)exec_env).TxtDatasetFileName + ex.StackTrace + ex.Message);
+                    }
                 }, prg);
                 tasks.Add(t);
             }

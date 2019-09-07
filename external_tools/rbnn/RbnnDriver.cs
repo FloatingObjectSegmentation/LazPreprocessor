@@ -16,7 +16,7 @@ namespace external_tools.rbnn
     {
 
         #region [API]
-        public static string ExecuteParallelTxt(string filepath, string resultfile_prefix, double[] radius_values, int cores)
+        public string ExecuteParallelTxt(string filepath, string resultfile_prefix, double[] radius_values, int cores)
         {
 
             List<List<double>> rbnn_r_batches = MyCollections.Split<double>(
@@ -30,7 +30,7 @@ namespace external_tools.rbnn
             return resultfilepath;
         }
         
-        public static string ExecuteTxt(string filepath, string resultfile_prefix, double[] radius_values) {
+        public string ExecuteTxt(string filepath, string resultfile_prefix, double[] radius_values) {
             string newFileName = Txt2Pcd.ExecXYZ(filepath);
             string result_file_name = Execute(newFileName, resultfile_prefix, radius_values);
             File.Delete(newFileName);
@@ -40,7 +40,7 @@ namespace external_tools.rbnn
         /// <summary>
         /// accepts a .pcd file, returns the result filepath
         /// </summary>
-        public static string Execute(string filepath, string resultfile_prefix, double[] radius_values) {
+        public string Execute(string filepath, string resultfile_prefix, double[] radius_values) {
 
             string pshcmd = String.Format("{0}\\rbnn.exe {1} {2} {3} ",
                                                      GConfig.TOOL_RBNN_PATH,
@@ -57,7 +57,7 @@ namespace external_tools.rbnn
         #endregion
 
         #region [auxiliary]
-        private static int ExecEachValInOwnThread(string rbnn_exe_location, string filepath, List<List<double>> rbnn_batches)
+        private int ExecEachValInOwnThread(string rbnn_exe_location, string filepath, List<List<double>> rbnn_batches)
         {
             int num_tasks = rbnn_batches.Count;
             Barrier barrier = new Barrier(participantCount: num_tasks);
@@ -86,7 +86,7 @@ namespace external_tools.rbnn
             return num_tasks;
         }
 
-        private static string CombineToOneFileAndDeleteOthers(string filepath, string resultfile_prefix, int num_tasks)
+        private string CombineToOneFileAndDeleteOthers(string filepath, string resultfile_prefix, int num_tasks)
         {
             string result_filepath = get_result_filepath(resultfile_prefix, filepath);
 
@@ -104,7 +104,7 @@ namespace external_tools.rbnn
             return result_filepath;
         }
 
-        private static string get_result_filepath(string prefix, string filepath)
+        private string get_result_filepath(string prefix, string filepath)
         {
             return Path.Combine(Path.GetDirectoryName(filepath), prefix + Path.GetFileName(filepath));
         }
