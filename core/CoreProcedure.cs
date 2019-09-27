@@ -56,11 +56,14 @@ namespace core
            txt_path = filepath.Replace(".laz", ".txt").Replace(".las", ".txt");
            txt_class_path = filepath.Replace(".laz", $"{GConfig.class_filename_suffix}.txt").Replace(".las", $"{GConfig.class_filename_suffix}.txt");
            string txt_intensity_path = filepath.Replace(".laz", $"{GConfig.intensity_filename_suffix}.txt").Replace(".las", $"{GConfig.intensity_filename_suffix}.txt");
+           string txt_angle_path = filepath.Replace(".laz", $"{GConfig.angle_filename_suffix}.txt").Replace(".las", $"{GConfig.angle_filename_suffix}.txt");
+           string txt_direction_path = filepath.Replace(".laz", $"{GConfig.direction_filename_suffix}.txt").Replace(".las", $"{GConfig.direction_filename_suffix}.txt");
            Las2Txt.Exec(Path.GetDirectoryName(filepath), filepath, txt_path, attributes_basic);
            Las2Txt.Exec(Path.GetDirectoryName(filepath), filepath, txt_class_path, attributes_class);
            Las2Txt.Exec(Path.GetDirectoryName(filepath), filepath, txt_intensity_path, "i");
+           Las2Txt.Exec(Path.GetDirectoryName(filepath), filepath, txt_angle_path, "a");
+           Las2Txt.Exec(Path.GetDirectoryName(filepath), filepath, txt_direction_path, "d");
            pcd_path = txt_path.Replace(".txt", ".pcd");
-
         }
 
         void TransformTxtFileToPcdFile(string txt_path, string separator = " ", string pathappend = "")

@@ -27,7 +27,7 @@ namespace common
 
         #region [downloader]
         //// exec type
-        public const TypeOfExecution TYPE_OF_EXEC = TypeOfExecution.Single;
+        public const TypeOfExecution TYPE_OF_EXEC = TypeOfExecution.CherryPick;
 
         // which chunks to get, (depending on execution type)
         public static int[] Range2D_CHUNKS = { 449, 121, 449, 121 }; //minx,miny,maxx,maxy in thousand, manualy set based on ARSO website
@@ -93,6 +93,8 @@ namespace common
         #region [core]
         public static string class_filename_suffix = "class";
         public static string intensity_filename_suffix = "intensity";
+        public static string angle_filename_suffix = "angle";
+        public static string direction_filename_suffix = "direction";
         public static string rbnn_core_result_prefix = "rbnnresult";
         public static double[] RBNN_R_VALUES = { 3, 4, 5, 6, 7, 8 };
         #endregion
