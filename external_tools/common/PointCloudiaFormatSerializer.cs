@@ -48,9 +48,39 @@ namespace external_tools.common
                 vals.Add(scale);
                 string shape = samples[i].name;
                 vals.Add(shape);
-                string airplane_pos = samples[i].location.X + "," + samples[i].location.Y + "," + samples[i].location.Z + 1000.0f;
+                string airplane_pos = samples[i].location.X + "," + samples[i].location.Y + "," + samples[i].airplaneHeight;
                 vals.Add(airplane_pos);
                 string dist = RbnnMinValsPerObject[i].ToString();
+                vals.Add(dist);
+                a += String.Join(" ", vals) + "\n";
+            }
+
+            return a;
+        }
+
+        public static string AugmentableSampleResultFormat(List<AugmentableObjectSample> samples)
+        {
+            // id   position scale  shape airplane_position distance_from_transitive_floor
+            // int  x,y,z    x,y,z  BIRD  x,y,z             double
+            // space separated
+            string a = "";
+            int currid = 0;
+            for (int i = 0; i < samples.Count; i++)
+            {
+
+                List<string> vals = new List<string>();
+
+                string id = currid.ToString();
+                vals.Add(id);
+                string pos = samples[i].location.X + "," + samples[i].location.Y + "," + samples[i].location.Z;
+                vals.Add(pos);
+                string scale = samples[i].sizeMeters.X + "," + samples[i].sizeMeters.Y + "," + samples[i].sizeMeters.Z;
+                vals.Add(scale);
+                string shape = samples[i].name;
+                vals.Add(shape);
+                string airplane_pos = samples[i].location.X + "," + samples[i].location.Y + "," + samples[i].airplaneHeight;
+                vals.Add(airplane_pos);
+                string dist = samples[i].rbnnMinVal.ToString();
                 vals.Add(dist);
                 a += String.Join(" ", vals) + "\n";
             }

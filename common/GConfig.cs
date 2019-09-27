@@ -22,15 +22,16 @@ namespace common
         public const string TOOL_RBNN_PATH = RESOURCES_FOLDER;
         public const string TOOL_OVERLAP_COMPUTE_PATH = RESOURCES_FOLDER;
         public const string TOOL_UNDERGROUND_FILTER_PATH = RESOURCES_FOLDER;
+        public const string TOOL_AIRPLANE_HEIGHT_PATH = RESOURCES_FOLDER;
         #endregion
 
         #region [downloader]
         //// exec type
-        public const TypeOfExecution TYPE_OF_EXEC = TypeOfExecution.CherryPick;
+        public const TypeOfExecution TYPE_OF_EXEC = TypeOfExecution.Single;
 
         // which chunks to get, (depending on execution type)
         public static int[] Range2D_CHUNKS = { 449, 121, 449, 121 }; //minx,miny,maxx,maxy in thousand, manualy set based on ARSO website
-        public const string SINGLE_CHUNK = "464_132";
+        public const string SINGLE_CHUNK = "460_103";
         public const string CHERRY_PICKED_CHUNKS = "462_100, 464_99, 467_99, 469_101, 469_103, 452_113, 442_110, 436_111, 428_116, 424_112, 410_97, 406_97, 386_95, 386_99," + 
                                                    "407_133, 405_132, 401_136, 453_141, 451_143, 472_134, 518_133, 601_158, 605_161, 613_156, 614_154, 549_156, 548_157," +
                                                    "534_159, 530_155, 525_147, 524_148, 524_147, 525_145, 414_125, 413_127, 408_122, 394_105, 393_105, 394_102, 396_93, " +

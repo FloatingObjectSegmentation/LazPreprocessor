@@ -11,6 +11,8 @@ namespace common.structs
         public Vector3 sizeMeters;
         public Vector3 location;
         public double maxDim;
+        public double airplaneHeight;
+        public double rbnnMinVal;
 
         public AugmentableObjectSample(string name, Vector3 sizeMeters, Vector3 location, double maxDim)
         {

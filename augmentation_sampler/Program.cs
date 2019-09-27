@@ -64,14 +64,14 @@ namespace augmentation_sampler
             List<List<int>> filteredChunks = new List<List<int>>();
             foreach (List<int> chunk in chunks) {
 
-                bool kurac = true;
+                bool some = true;
                 for (int i = 0; i < list.Count; i++) {
                     if (list[i][0] == chunk[0] && list[i][1] == chunk[1]) {
-                        kurac = false;
+                        some = false;
                         break;
                     }
                 }
-                if (!kurac) continue;
+                if (!some) continue;
 
                 filteredChunks.Add(chunk);
             }

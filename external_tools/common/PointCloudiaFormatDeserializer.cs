@@ -2,6 +2,7 @@
 using common.structs;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Text;
 
@@ -34,9 +35,30 @@ namespace external_tools.common
                 string name = parts[3];
 
 
-
+                double rbnnminval = double.Parse(parts[5]);
                 AugmentableObjectSample samp = new AugmentableObjectSample(name, scale, pos, Numpy.MaxDimension(scale));
+                samp.rbnnMinVal = rbnnminval;
+
                 samples.Add(samp);
+            }
+            return samples;
+        }
+
+        public static List<string> GetDirectionDefiningPoints(string augmentable_format_content) {
+
+            List<string> samples = new List<string>();
+
+            string[] lines = augmentable_format_content.Split("\n");
+
+            foreach (var line in lines)
+            {
+                string[] parts = line.Split(" ");
+
+                if (parts.Length < 7)
+                    throw new Exception("At least one of the augmentations' scan directions is not labeled");
+
+                samples.Add(string.Join(' ', parts.Skip(6).ToArray()));
+                
             }
             return samples;
         }
